@@ -1,0 +1,17 @@
+{
+    "name": "thunder/travis",
+    "description": "Travis scripts for testing drupal modules.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Daniel Bosen",
+            "email": "daniel.bosen@burda.com"
+        }
+    ],
+    "bin": ["bin/verify-drupal-coding-standards"],
+    "require": {
+        "drupal/coder": "^8.2",
+        "symfony/yaml": "^3.4"
+    }
+}

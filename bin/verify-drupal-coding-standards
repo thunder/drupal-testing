@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
+phpcs --standard=Drupal --ignore=node_modules,bower_components,vendor,README.md -p .
+phpcs --standard=DrupalPractice --ignore=node_modules,bower_components,vendor,README.md -p .
