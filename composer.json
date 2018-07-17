@@ -9,9 +9,12 @@
             "email": "daniel.bosen@burda.com"
         }
     ],
-    "bin": ["bin/verify-drupal-coding-standards"],
+    "bin": [
+        "bin/test-module"
+    ],
     "require": {
-        "drupal/coder": "^8.2",
+        "burdamagazinorg/thunder-dev-tools": "~1.0.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
         "symfony/yaml": "^3.4"
     }
 }
