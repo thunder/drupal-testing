@@ -66,18 +66,13 @@ source $(get_script_dir)/../lib/testing-library.sh
 ### Script ###
 
 install_requirements
+
 test_coding_style
 
-case ${DISTRIBUTION} in
-    "drupal")
-        create_drupal_project
-        install_drupal "standard"
-    ;;
-    "thunder")
-        create_thunder_project
-        install_drupal "thunder"
-    ;;
-esac
+create_project ${DISTRIBUTION}
+
+install_project ${DISTRIBUTION}
 
 start_services
+
 run_tests
