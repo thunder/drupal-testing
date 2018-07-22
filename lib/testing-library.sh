@@ -80,11 +80,11 @@ create_project() {
 
 install_project() {
     local distribution=${1-"drupal"}
-    local profile=${1-"standard"}
+    local profile=""
 
     case ${distribution} in
         "drupal")
-            profile="standard"
+            profile="minimal"
         ;;
         "thunder")
             profile="thunder"
