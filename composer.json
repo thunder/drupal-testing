@@ -10,6 +10,9 @@
         }
     ],
     "bin": [
+        "bin/keep-travis-running",
+        "bin/create-project",
+        "bin/install-project",
         "bin/test-module"
     ],
     "require": {

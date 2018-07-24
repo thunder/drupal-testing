@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-distribution_docroot() {
+get_distribution_docroot() {
     case ${DISTRIBUTION} in
         "thunder")
             docroot="docroot"
@@ -12,8 +12,21 @@ distribution_docroot() {
     echo ${docroot}
 }
 
+get_composer_bin_dir() {
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ];
+    then
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
+        exit 1
+    fi
+
+    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-`jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json`}
+
+    echo ${composer_bin_dir}
+}
+
 install_requirements() {
-    if ! [ -x "$(command -v eslint)" ]; then
+    if ! [ -x "$(command -v eslint)" ]
+    then
         npm install -g eslint
     fi
 }
@@ -21,18 +34,21 @@ install_requirements() {
 test_coding_style() {
     local check_parameters=""
 
-    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]
+    then
         check_parameters="${check_parameters} --phpcs"
     fi
 
-    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
+    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]
+    then
         check_parameters="${check_parameters} --javascript"
     fi
 
     bash check-guidelines.sh --init
     bash check-guidelines.sh -v ${check_parameters}
 
-    if [ $? -ne 0 ]; then
+    if [ $? -ne 0 ]
+    then
         return $?
     fi
 }
@@ -43,7 +59,7 @@ require_local_project() {
 }
 
 composer_install() {
-    composer install --optimize-autoloader --apcu-autoloader --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 create_drupal_project() {
@@ -68,10 +84,6 @@ create_project() {
         ;;
     esac
 
-    # The folder where composer puts binaries, the default value is read from the projects composer.json
-    # TODO: I do not like this here, but we cannot know what the projects bin directory is in the environment.sh
-    THUNDER_TRAVIS_COMPOSER_BIN_DIR=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-`jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json`}
-
     composer require webflo/drupal-core-require-dev:${THUNDER_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     require_local_project
@@ -80,7 +92,15 @@ create_project() {
 
 install_project() {
     local distribution=${1-"drupal"}
+    local drupal="core/scripts/drupal"
+    local composer_bin_dir=$(get_composer_bin_dir)
     local profile=""
+
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
+    then
+        echo "${distribution} was not installed correctly, please run create-project first."
+        exit 1
+    fi
 
     case ${distribution} in
         "drupal")
@@ -91,19 +111,27 @@ install_project() {
         ;;
     esac
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
+    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
-    php core/scripts/drupal install ${profile} --no-interaction
-    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/drush en simpletest
+    php ${drupal} install ${profile} --no-interaction
+    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush en simpletest
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
 
 start_services() {
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(distribution_docroot)
+    local drupal="core/scripts/drupal"
 
-    php core/scripts/drupal server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
-    timeout 30 sh -c 'until nc -z $0 $1; do sleep 1; done' ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT}
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
+    then
+        echo "${distribution} was not installed correctly, please run create-project first."
+        exit 1
+    fi
+
+    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
+
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
+    nc -z -w 20 ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
@@ -111,16 +139,40 @@ start_services() {
 }
 
 run_tests() {
-    local test_selection=""
-    local docroot=$(distribution_docroot)
+    local test_selection
+    local docroot=$(get_distribution_docroot)
+    local composer_bin_dir=$(get_composer_bin_dir)
+    local phpunit=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
+    local settings_file=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
 
-    if [ ${THUNDER_TRAVIS_TEST_GROUP} ]; then
-        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
+    if [ ! -f ${phpunit} ];
+    then
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
+        exit 1
     fi
 
-    chmod u+w ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default
-    chmod u+w ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
-    rm ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
+    if ! nc -z ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT} 2>/dev/null;
+    then
+        echo "The web server has not been started."
+        exit 1
+    fi
 
-    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${THUNDER_TRAVIS_COMPOSER_BIN_DIR}/phpunit --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
+    if [ ${THUNDER_TRAVIS_TEST_GROUP} ]
+    then
+       test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
+    fi
+
+    if [ -f ${settings_file} ]
+    then
+        chmod u+w `dirname ${settings_file}`
+        chmod u+w ${settings_file}
+        rm ${settings_file}
+    fi
+
+    php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
+
+    if [ $? -ne 0 ]
+    then
+        return $?
+    fi
 }

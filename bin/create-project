@@ -6,7 +6,7 @@
 show_help() {
     cat << EOF
 Usage:   ${0##*/} [-h|--help] [DISTRIBUTION]
-Run tests for a drupal module in DISTRIBUTION (drupal core by default).
+Create DISTRIBUTION (drupal core by default) with composer for testing.
 
 Parameter:
     DISTRIBUTION                The distribution to test the module in.
@@ -65,5 +65,6 @@ source $(get_script_dir)/../lib/testing-library.sh
 
 ### Script ###
 
-start_services
-run_tests
+install_requirements
+test_coding_style
+create_project ${DISTRIBUTION}
