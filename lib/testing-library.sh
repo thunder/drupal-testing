@@ -13,20 +13,18 @@ get_distribution_docroot() {
 }
 
 get_composer_bin_dir() {
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ];
-    then
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
         echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-`jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json`}
+    local composer_bin_dir=${THUNDER_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
 
     echo ${composer_bin_dir}
 }
 
 install_requirements() {
-    if ! [ -x "$(command -v eslint)" ]
-    then
+    if ! [ -x "$(command -v eslint)" ]; then
         npm install -g eslint
     fi
 }
@@ -34,21 +32,18 @@ install_requirements() {
 test_coding_style() {
     local check_parameters=""
 
-    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]
-    then
+    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
         check_parameters="${check_parameters} --phpcs"
     fi
 
-    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]
-    then
+    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
         check_parameters="${check_parameters} --javascript"
     fi
 
     bash check-guidelines.sh --init
     bash check-guidelines.sh -v ${check_parameters}
 
-    if [ $? -ne 0 ]
-    then
+    if [ $? -ne 0 ]; then
         return $?
     fi
 }
@@ -92,12 +87,12 @@ create_project() {
 
 install_project() {
     local distribution=${1-"drupal"}
-    local drupal="core/scripts/drupal"
     local composer_bin_dir=$(get_composer_bin_dir)
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local profile=""
+    local additional_drush_parameter=""
 
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
-    then
+    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ]; then
         echo "${distribution} was not installed correctly, please run create-project first."
         exit 1
     fi
@@ -108,30 +103,28 @@ install_project() {
         ;;
         "thunder")
             profile="thunder"
+            additional_drush_parameter="thunder_module_configure_form.install_modules_thunder_demo=NULL"
         ;;
     esac
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
+    mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
-    php ${drupal} install ${profile} --no-interaction
-    ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush en simpletest
-
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
+    /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
+    ${drush} pm-enable simpletest
 }
 
 start_services() {
-    local drupal="core/scripts/drupal"
+    local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/${drupal} ];
-    then
+    if [ ! -f ${docroot}/index.php ]; then
         echo "${distribution} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
+    cd ${docroot}
 
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
-    nc -z -w 20 ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT}
+    php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} .ht.router.php &>/dev/null &
+    nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
@@ -145,34 +138,24 @@ run_tests() {
     local phpunit=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local settings_file=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
 
-    if [ ! -f ${phpunit} ];
-    then
+    if [ ! -f ${phpunit} ]; then
         echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    if ! nc -z ${THUNDER_TRAVIS_SIMPLETEST_HOST} ${THUNDER_TRAVIS_SIMPLETEST_PORT} 2>/dev/null;
-    then
+    if ! nc -z ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT} 2>/dev/null; then
         echo "The web server has not been started."
         exit 1
     fi
 
-    if [ ${THUNDER_TRAVIS_TEST_GROUP} ]
-    then
+    if [ ${THUNDER_TRAVIS_TEST_GROUP} ]; then
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
-    fi
-
-    if [ -f ${settings_file} ]
-    then
-        chmod u+w `dirname ${settings_file}`
-        chmod u+w ${settings_file}
-        rm ${settings_file}
     fi
 
     php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
 
-    if [ $? -ne 0 ]
-    then
+    # TODO: this does not work!
+    if [ $? -ne 0 ]; then
         return $?
     fi
 }

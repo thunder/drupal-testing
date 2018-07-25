@@ -66,5 +66,7 @@ source $(get_script_dir)/../lib/testing-library.sh
 ### Script ###
 
 install_requirements
+
+# Coding styles should be checked as early as possible, to fail as quickly as possible
 test_coding_style
 create_project ${DISTRIBUTION}
