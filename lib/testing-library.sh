@@ -152,10 +152,5 @@ run_tests() {
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection}
-
-    # TODO: this does not work!
-    if [ $? -ne 0 ]; then
-        return $?
-    fi
+    php ${phpunit} --verbose -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection} || exit 1
 }
