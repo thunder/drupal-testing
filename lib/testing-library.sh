@@ -114,6 +114,7 @@ install_project() {
 }
 
 start_services() {
+    local drupal="core/scripts/drupal"
     local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
     if [ ! -f ${docroot}/index.php ]; then
@@ -123,7 +124,7 @@ start_services() {
 
     cd ${docroot}
 
-    php -S ${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} .ht.router.php &>/dev/null &
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
