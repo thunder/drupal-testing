@@ -124,7 +124,7 @@ start_services() {
 
     cd ${docroot}
 
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_SIMPLETEST_HOST} --port=${THUNDER_TRAVIS_SIMPLETEST_PORT} &
+    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
