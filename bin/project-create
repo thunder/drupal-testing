@@ -6,7 +6,7 @@
 show_help() {
     cat << EOF
 Usage:   ${0##*/} [-h|--help] [DISTRIBUTION]
-Install DISTRIBUTION (drupal core by default) for testing.
+Create DISTRIBUTION (drupal core by default) with composer for testing.
 
 Parameter:
     DISTRIBUTION                The distribution to test the module in.
@@ -65,4 +65,8 @@ source $(get_script_dir)/../lib/testing-library.sh
 
 ### Script ###
 
-install_project ${DISTRIBUTION}
+prepare_environment
+
+# Coding styles should be checked as early as possible, to fail as quickly as possible
+test_coding_style
+create_project

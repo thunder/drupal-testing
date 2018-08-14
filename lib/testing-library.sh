@@ -23,7 +23,11 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
-install_requirements() {
+prepare_environment() {
+    if [ -x "$(command -v phpenv)" ]; then
+        phpenv config-rm xdebug.ini
+    fi
+
     if ! [ -x "$(command -v eslint)" ]; then
         npm install -g eslint
     fi
@@ -49,8 +53,9 @@ test_coding_style() {
 }
 
 require_local_project() {
-    composer config repositories.test_module '{"type": "path", "url": "'${THUNDER_TRAVIS_PROJECT_BASEDIR}'"}' --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    composer require ${THUNDER_TRAVIS_COMPOSER_NAME} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer require ${THUNDER_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 composer_install() {
@@ -59,6 +64,7 @@ composer_install() {
 
 create_drupal_project() {
     composer create-project drupal-composer/drupal-project:8.x-dev ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY} --stability dev --no-interaction --no-install
+    composer config repositories.assets composer https://asset-packagist.org --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require drupal/core:${THUNDER_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
@@ -67,10 +73,20 @@ create_thunder_project() {
     composer require burdamagazinorg/thunder:${THUNDER_TRAVIS_THUNDER_VERSION} --no-update --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
-create_project() {
-    local distribution=${1-"drupal"}
+move_assets() {
+    local libraries=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/libraries;
+    mkdir ${libraries}
 
-    case ${distribution} in
+    if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
+        mv ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
+    fi
+    if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]; then
+        mv ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
+    fi
+}
+
+create_project() {
+    case ${DISTRIBUTION} in
         "drupal")
             create_drupal_project
         ;;
@@ -83,21 +99,21 @@ create_project() {
 
     require_local_project
     composer_install
+    move_assets
 }
 
 install_project() {
-    local distribution=${1-"drupal"}
     local composer_bin_dir=$(get_composer_bin_dir)
     local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local profile=""
     local additional_drush_parameter=""
 
     if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ]; then
-        echo "${distribution} was not installed correctly, please run create-project first."
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    case ${distribution} in
+    case ${DISTRIBUTION} in
         "drupal")
             profile="minimal"
         ;;
@@ -107,7 +123,7 @@ install_project() {
         ;;
     esac
 
-    mysql -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
+    mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
 
     /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
     ${drush} pm-enable simpletest
@@ -115,21 +131,19 @@ install_project() {
 
 start_services() {
     local drupal="core/scripts/drupal"
+    local composer_bin_dir=$(get_composer_bin_dir)
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
     local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
 
     if [ ! -f ${docroot}/index.php ]; then
-        echo "${distribution} was not installed correctly, please run create-project first."
+        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
-    cd ${docroot}
-
-    php ${drupal} server --suppress-login --host=${THUNDER_TRAVIS_HOST} --port=${THUNDER_TRAVIS_HTTP_PORT} &
+    ${drush} runserver "http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
-
-    docker run -d -v ${THUNDER_TRAVIS_PROJECT_BASEDIR}:/project --shm-size 256m --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
+    docker run -d -v /dev/shm:/dev/shm --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 }
 
 run_tests() {
@@ -154,6 +168,15 @@ run_tests() {
     fi
 
     cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
-    php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php `which php` --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
+
+    case ${THUNDER_TRAVIS_TEST_RUNNER} in
+        "phpunit")
+            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit --verbose --debug -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection} ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/modules/contrib/${THUNDER_TRAVIS_PROJECT_NAME} || exit 1
+        ;;
+        "run-tests")
+            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php $(which php) --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
+        ;;
+    esac
+
     cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }

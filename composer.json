@@ -11,9 +11,9 @@
     ],
     "bin": [
         "bin/keep-travis-running",
-        "bin/create-project",
-        "bin/install-project",
-        "bin/test-module"
+        "bin/project-create",
+        "bin/project-install",
+        "bin/project-test"
     ],
     "require": {
         "burdamagazinorg/thunder-dev-tools": "~1.0.0",
