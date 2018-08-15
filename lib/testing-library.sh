@@ -1,7 +1,25 @@
 #!/usr/bin/env bash
 
+### Helper functions ###
+
+stage_exists() {
+    declare -f -F _stage_${1} > /dev/null
+    return ${?}
+}
+
+stage_dependency() {
+    declare -A deps=(
+        [run_tests]="start_services"
+        [start_services]="install_project"
+        [install_project]="build_project"
+        [build_project]="test_coding_style"
+        [test_coding_style]="prepare_environment"
+    )
+    echo ${deps[${1}]}
+}
+
 get_distribution_docroot() {
-    case ${DISTRIBUTION} in
+    case ${THUNDER_TRAVIS_DISTRIBUTION} in
         "thunder")
             docroot="docroot"
         ;;
@@ -9,12 +27,11 @@ get_distribution_docroot() {
             docroot="web"
     esac
 
-    echo ${docroot}
+    echo ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
 }
 
 get_composer_bin_dir() {
     if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]; then
-        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
         exit 1
     fi
 
@@ -23,34 +40,6 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
-prepare_environment() {
-    if [ -x "$(command -v phpenv)" ]; then
-        phpenv config-rm xdebug.ini
-    fi
-
-    if ! [ -x "$(command -v eslint)" ]; then
-        npm install -g eslint
-    fi
-}
-
-test_coding_style() {
-    local check_parameters=""
-
-    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
-        check_parameters="${check_parameters} --phpcs"
-    fi
-
-    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
-        check_parameters="${check_parameters} --javascript"
-    fi
-
-    bash check-guidelines.sh --init
-    bash check-guidelines.sh -v ${check_parameters}
-
-    if [ $? -ne 0 ]; then
-        return $?
-    fi
-}
 
 require_local_project() {
     composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -74,7 +63,7 @@ create_thunder_project() {
 }
 
 move_assets() {
-    local libraries=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/libraries;
+    local libraries=$(get_distribution_docroot)/libraries;
     mkdir ${libraries}
 
     if [ -d ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]; then
@@ -85,8 +74,93 @@ move_assets() {
     fi
 }
 
-create_project() {
-    case ${DISTRIBUTION} in
+clean_up() {
+    if [ ${THUNDER_TRAVIS_NO_CLEANUP} ]; then
+        return
+    fi
+
+    docker rm -f selenium-for-tests
+
+    chmod u+w -R ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    rm -rf ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    rm -rf ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+}
+
+stage_is_finished() {
+    [ -f "${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]
+}
+
+finish_stage() {
+    local stage="${1}"
+
+    if [ ! -d ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
+        mkdir ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+    fi
+
+    touch ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
+}
+
+run_stage() {
+    local stage="${1}"
+
+    if stage_is_finished ${stage}; then
+        return
+    fi
+
+    local dependency=$(stage_dependency ${stage})
+
+
+    if [ ! -z ${dependency} ]; then
+        run_stage ${dependency}
+    fi
+
+    # Call the stage function
+    _stage_${stage}
+
+    finish_stage ${stage}
+}
+
+### The stages. Do not run these directly, use run_stage() to invoke. ###
+
+_stage_prepare_environment() {
+    printf "Preparing environment\n\n"
+
+    if [ -x "$(command -v phpenv)" ]; then
+        phpenv config-rm xdebug.ini
+    fi
+}
+
+_stage_test_coding_style() {
+    printf "Testing coding style\n\n"
+
+    local check_parameters=""
+
+    if ! [ -x "$(command -v eslint)" ]; then
+        npm install -g eslint
+    fi
+
+    if [ ${THUNDER_TRAVIS_TEST_PHP} == 1 ]; then
+        check_parameters="${check_parameters} --phpcs"
+    fi
+
+    if [ ${THUNDER_TRAVIS_TEST_JAVASCRIPT} == 1 ]; then
+        check_parameters="${check_parameters} --javascript"
+    fi
+
+    bash check-guidelines.sh --init
+    bash check-guidelines.sh -v ${check_parameters}
+
+    # Propagate possible errors
+    local exit_code=${?}
+    if [ ${exit_code} -ne 0 ]; then
+        exit ${exit_code}
+    fi
+}
+
+_stage_build_project() {
+    printf "Building project\n\n"
+
+    case ${THUNDER_TRAVIS_DISTRIBUTION} in
         "drupal")
             create_drupal_project
         ;;
@@ -102,18 +176,15 @@ create_project() {
     move_assets
 }
 
-install_project() {
+_stage_install_project() {
+    printf "Installing project\n\n"
+
     local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
     local profile=""
     local additional_drush_parameter=""
 
-    if [ ! -f ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)/index.php ]; then
-        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
-        exit 1
-    fi
-
-    case ${DISTRIBUTION} in
+    case ${THUNDER_TRAVIS_DISTRIBUTION} in
         "drupal")
             profile="minimal"
         ;;
@@ -123,60 +194,45 @@ install_project() {
         ;;
     esac
 
-    mysql -u ${THUNDER_TRAVIS_MYSQL_USER} --password=${THUNDER_TRAVIS_MYSQL_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS ${THUNDER_TRAVIS_MYSQL_DATABASE};"
-
-    /usr/bin/env PHP_OPTIONS="-d sendmail_path=$(which true)" ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB}  --yes additional_drush_parameter
+    PHP_OPTIONS="-d sendmail_path=$(which true)"
+    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
     ${drush} pm-enable simpletest
 }
 
-start_services() {
+_stage_start_services() {
+    printf "Starting services\n\n"
+
     local drupal="core/scripts/drupal"
     local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)"
-    local docroot=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/$(get_distribution_docroot)
-
-    if [ ! -f ${docroot}/index.php ]; then
-        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
-        exit 1
-    fi
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
 
     ${drush} runserver "http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
     nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
 
-    docker run -d -v /dev/shm:/dev/shm --net=host selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
+    docker run -d -v /dev/shm:/dev/shm --net=host --name=selenium-for-tests selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 }
 
-run_tests() {
+_stage_run_tests() {
+    printf "Running tests\n\n"
+
     local test_selection
     local docroot=$(get_distribution_docroot)
     local composer_bin_dir=$(get_composer_bin_dir)
     local phpunit=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
-    local settings_file=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/sites/default/settings.php
-
-    if [ ! -f ${phpunit} ]; then
-        echo "${DISTRIBUTION} was not installed correctly, please run create-project first."
-        exit 1
-    fi
-
-    if ! nc -z ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT} 2>/dev/null; then
-        echo "The web server has not been started."
-        exit 1
-    fi
+    local runtests=${docroot}/core/scripts/run-tests.sh
+    local settings_file=${docroot}/sites/default/settings.php
 
     if [ ${THUNDER_TRAVIS_TEST_GROUP} ]; then
        test_selection="--group ${THUNDER_TRAVIS_TEST_GROUP}"
     fi
 
-    cd ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}
-
     case ${THUNDER_TRAVIS_TEST_RUNNER} in
         "phpunit")
-            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit --verbose --debug -c ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core ${test_selection} ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/modules/contrib/${THUNDER_TRAVIS_PROJECT_NAME} || exit 1
+            php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${docroot}/modules/contrib/${THUNDER_TRAVIS_PROJECT_NAME} || exit 1
         ;;
         "run-tests")
-            php ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}/core/scripts/run-tests.sh --php $(which php) --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
+            php ${runtests} --php $(which php) --suppress-deprecations --verbose --color --url http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT} ${THUNDER_TRAVIS_TEST_GROUP} || exit 1
         ;;
     esac
 
-    cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 }
