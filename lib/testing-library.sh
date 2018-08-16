@@ -40,7 +40,6 @@ get_composer_bin_dir() {
     echo ${composer_bin_dir}
 }
 
-
 require_local_project() {
     composer config repositories.0 path ${THUNDER_TRAVIS_PROJECT_BASEDIR} --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -81,9 +80,8 @@ clean_up() {
 
     docker rm -f selenium-for-tests
 
-    chmod u+w -R ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    rm -rf ${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-    rm -rf ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+    chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
+    rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
 }
 
 stage_is_finished() {
@@ -94,7 +92,7 @@ finish_stage() {
     local stage="${1}"
 
     if [ ! -d ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY} ]; then
-        mkdir ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
+        mkdir -p ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}
     fi
 
     touch ${THUNDER_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
@@ -127,6 +125,10 @@ _stage_prepare_environment() {
 
     if [ -x "$(command -v phpenv)" ]; then
         phpenv config-rm xdebug.ini
+        # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
+        echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
+        phpenv config-add drupal.php.ini
+        phpenv rehash
     fi
 }
 
