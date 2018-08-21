@@ -9,9 +9,9 @@ stage_exists() {
 
 stage_dependency() {
     declare -A deps=(
-        [run_tests]="start_services"
-        [start_services]="install_project"
-        [install_project]="build_project"
+        [run_tests]="install_project"
+        [install_project]="start_services"
+        [start_services]="build_project"
         [build_project]="test_coding_style"
         [test_coding_style]="prepare_environment"
     )
@@ -78,7 +78,7 @@ clean_up() {
         return
     fi
 
-    docker rm -f selenium-for-tests
+    docker rm -f -v selenium-for-tests
 
     chmod u+w -R ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
     rm -rf ${THUNDER_TRAVIS_TEST_BASE_DIRECTORY}
@@ -178,6 +178,19 @@ _stage_build_project() {
     move_assets
 }
 
+_stage_start_services() {
+    printf "Starting services\n\n"
+
+    local drupal="core/scripts/drupal"
+    local composer_bin_dir=$(get_composer_bin_dir)
+    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
+
+    ${drush} runserver "http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
+    nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
+
+    docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
+}
+
 _stage_install_project() {
     printf "Installing project\n\n"
 
@@ -199,19 +212,6 @@ _stage_install_project() {
     PHP_OPTIONS="-d sendmail_path=$(which true)"
     ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
     ${drush} pm-enable simpletest
-}
-
-_stage_start_services() {
-    printf "Starting services\n\n"
-
-    local drupal="core/scripts/drupal"
-    local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${THUNDER_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
-
-    ${drush} runserver "http://${THUNDER_TRAVIS_HOST}:${THUNDER_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
-    nc -z -w 20 ${THUNDER_TRAVIS_HOST} ${THUNDER_TRAVIS_HTTP_PORT}
-
-    docker run -d -v /dev/shm:/dev/shm --net=host --name=selenium-for-tests selenium/standalone-chrome:${THUNDER_TRAVIS_SELENIUM_CHROME_VERSION}
 }
 
 _stage_run_tests() {
