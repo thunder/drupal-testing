@@ -20,7 +20,6 @@ Parameter:
                              install_project, start_services, run_tests
 Options:
     -h,  --help              Display this help.
-    -d   --distribution      The distribution to use. Defaults to drupal.
 
 Example:
     test-drupal-module                    Run everything.
@@ -55,9 +54,6 @@ for i in "${@}"; do
         -h | -\? | --help)
             show_help
         ;;
-        -d | --distribution)
-            THUNDER_TRAVIS_DISTRIBUTION=${i}
-        ;;
         -?*)
             echo "WARN: Unknown option (ignored): ${i}\n"
             show_help
@@ -72,7 +68,6 @@ done
 ### Fallback values ###
 
 THUNDER_TRAVIS_TEST_STAGE=${THUNDER_TRAVIS_TEST_STAGE:-run_tests}
-THUNDER_TRAVIS_DISTRIBUTION=${THUNDER_TRAVIS_DISTRIBUTION:-drupal}
 
 ### Source required files ###
 
@@ -80,6 +75,8 @@ source $(get_script_dir)/../lib/environment.sh
 source $(get_script_dir)/../lib/testing-library.sh
 
 ### Run stage ###
+
+cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
 
 if ! stage_exists ${THUNDER_TRAVIS_TEST_STAGE}; then
     printf "Unknown stage '${1}'\n\n"
