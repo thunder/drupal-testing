@@ -5,7 +5,7 @@
 # Output help to console.
 show_help() {
     cat << EOF
-Usage:   ${0##*/} [-h|--help] [-d|--distribution] [STAGE]
+Usage:   ${0##*/} [-h|--help] [-nc|--no-cleanup] [STAGE]
 Run tests for a drupal project (module) in travis. This has to be called from the modules folder.
 It builds a drupal install with the module and runs all tests that are defined in the module directory.
 It needs a running mysql database and docker for the selenium container.
@@ -20,6 +20,8 @@ Parameter:
                              install_project, start_services, run_tests
 Options:
     -h,  --help              Display this help.
+    -nc,  --no-cleanup       Do not cleanup after successfull tests, defaults to false. Set to 1 if you
+                             want to keep the installation.
 
 Example:
     test-drupal-module                    Run everything.
@@ -53,6 +55,10 @@ for i in "${@}"; do
     case ${i} in
         -h | -\? | --help)
             show_help
+        ;;
+        -nc | --no-cleanup)
+            THUNDER_TRAVIS_NO_CLEANUP=${i}
+            break
         ;;
         -?*)
             echo "WARN: Unknown option (ignored): ${i}\n"
@@ -88,6 +94,6 @@ dependency=$(stage_dependency ${THUNDER_TRAVIS_TEST_STAGE})
 
 run_stage ${THUNDER_TRAVIS_TEST_STAGE}
 
-if stage_is_finished "run_tests"; then
+if stage_is_finished "run_tests" && ${THUNDER_TRAVIS_CLEANUP}; then
     clean_up
 fi
