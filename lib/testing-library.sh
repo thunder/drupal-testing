@@ -9,13 +9,58 @@ stage_exists() {
 
 stage_dependency() {
     declare -A deps=(
-        [run_tests]="start_services"
-        [start_services]="install_project"
+        [run_tests]="start_web_server"
+        [start_web_server]="install_project"
         [install_project]="build_project"
         [build_project]="test_coding_style"
         [test_coding_style]="prepare_environment"
     )
     echo ${deps[${1}]}
+}
+
+function port_is_open() {
+	local host=${1}
+	local port=${2}
+
+    $(nc -z "${host}" "${port}")
+}
+
+function wait_for_port() {
+	local host=${1}
+	local port=${2}
+	local max_count=${3:-10}
+
+	local count=1
+
+	until port_is_open ${host} ${port}; do
+		sleep 1
+		if [ ${count} -gt ${max_count} ]
+		then
+			printf "Error: Timeout while waiting for port ${port} on host ${host}.\n" 1>&2
+			exit 1
+		fi
+		count=$[count+1]
+	done
+}
+
+# Test docker container health status
+function get_container_health {
+    docker inspect --format "{{json .State.Health.Status }}" $1
+}
+
+# Wait till docker container is fully started
+function wait_for_container {
+    local container=${1}
+    printf "Waiting for container ${container}."
+    while local status=$(get_container_health ${container}); [ ${status} != "\"healthy\"" ]; do
+        if [ ${status} == "\"unhealthy\"" ]; then
+            printf "Container ${container} failed to start. \n"
+            exit 1
+        fi
+        printf "."
+        sleep 1
+    done
+    printf " Container started!\n"
 }
 
 # This has currently no real meaning, but will be necessary, once we test with thunder_project.
@@ -102,7 +147,6 @@ run_stage() {
 
     local dependency=$(stage_dependency ${stage})
 
-
     if [ ! -z ${dependency} ]; then
         run_stage ${dependency}
     fi
@@ -118,7 +162,25 @@ run_stage() {
 _stage_prepare_environment() {
     printf "Preparing environment\n\n"
 
+    if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
+        printf "Starting selenium\n"
+        docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
+    fi
+
+    if  ! port_is_open ${DRUPAL_TRAVIS_DATABASE_HOST} ${DRUPAL_TRAVIS_DATABASE_PORT} ; then
+        printf "Starting database\n"
+        if [ ${DRUPAL_TRAVIS_DATABASE_PASSWORD} ]; then
+            docker run --detach --publish ${DRUPAL_TRAVIS_DATABASE_PORT}:3306 --name database-for-tests --env "MYSQL_USER=${DRUPAL_TRAVIS_DATABASE_USER}" --env "MYSQL_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD}" --env "MYSQL_DATABASE=${DRUPAL_TRAVIS_DATABASE_NAME}" --env "MYSQL_ALLOW_EMPTY_PASSWORD=true" mysql/mysql-server:5.7
+            wait_for_container database-for-tests
+        else
+            printf "No database password given. The docker container can only be started, when the environment variable DRUPAL_TRAVIS_DATABASE_PASSWORD is set to an non empty value\n"
+            exit 1
+        fi
+    fi
+
     if [ -x "$(command -v phpenv)" ]; then
+        printf "Configure php\n"
         phpenv config-rm xdebug.ini
         # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
         echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
@@ -157,6 +219,10 @@ _stage_test_coding_style() {
 _stage_build_project() {
     printf "Building project\n\n"
 
+    if [ ${TRAVIS} ]; then
+        composer global require hirak/prestissimo
+    fi
+
     create_drupal_project
 
     composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
@@ -179,17 +245,19 @@ _stage_install_project() {
     ${drush} pm-enable simpletest
 }
 
-_stage_start_services() {
-    printf "Starting services\n\n"
+_stage_start_web_server() {
+    printf "Starting web server\n\n"
 
     local drupal="core/scripts/drupal"
     local composer_bin_dir=$(get_composer_bin_dir)
-    local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=$(get_distribution_docroot)"
+    local docroot=$(get_distribution_docroot)
+    local drush="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
-    ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1  &
-    nc -z -w 20 ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
 
-    docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+    if  ! port_is_open ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT} ; then
+        ${drush} runserver "http://${DRUPAL_TRAVIS_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}" >/dev/null 2>&1 &
+        wait_for_port ${DRUPAL_TRAVIS_HOST} ${DRUPAL_TRAVIS_HTTP_PORT}
+    fi
 }
 
 _stage_run_tests() {

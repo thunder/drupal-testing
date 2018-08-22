@@ -17,7 +17,7 @@ Parameter:
     STAGE                    The test stage to execute, defaults to run_test (all stages are executed).
                              If a stage depends on other stages, they will be automatically called.
                              Possible values: prepare_environment, test_coding_style, build_project,
-                             install_project, start_services, run_tests
+                             install_project, start_web_server, run_tests
 Options:
     -h,  --help              Display this help.
     -nc,  --no-cleanup       Do not cleanup after successfull tests, defaults to false. Set to 1 if you
