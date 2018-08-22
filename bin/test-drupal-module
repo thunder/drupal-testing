@@ -57,7 +57,7 @@ for i in "${@}"; do
             show_help
         ;;
         -nc | --no-cleanup)
-            THUNDER_TRAVIS_NO_CLEANUP=${i}
+            DRUPAL_TRAVIS_NO_CLEANUP=${i}
             break
         ;;
         -?*)
@@ -66,14 +66,14 @@ for i in "${@}"; do
         ;;
         *)
         # last option has to be the test stage
-            THUNDER_TRAVIS_TEST_STAGE=${i}
+            DRUPAL_TRAVIS_TEST_STAGE=${i}
             break
     esac
 done
 
 ### Fallback values ###
 
-THUNDER_TRAVIS_TEST_STAGE=${THUNDER_TRAVIS_TEST_STAGE:-run_tests}
+DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
 
 ### Source required files ###
 
@@ -82,18 +82,18 @@ source $(get_script_dir)/../lib/testing-library.sh
 
 ### Run stage ###
 
-cd ${THUNDER_TRAVIS_PROJECT_BASEDIR}
+cd ${DRUPAL_TRAVIS_PROJECT_BASEDIR}
 
-if ! stage_exists ${THUNDER_TRAVIS_TEST_STAGE}; then
+if ! stage_exists ${DRUPAL_TRAVIS_TEST_STAGE}; then
     printf "Unknown stage '${1}'\n\n"
     show_help
     exit 1
 fi
 
-dependency=$(stage_dependency ${THUNDER_TRAVIS_TEST_STAGE})
+dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
 
-run_stage ${THUNDER_TRAVIS_TEST_STAGE}
+run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
 
-if stage_is_finished "run_tests" && ${THUNDER_TRAVIS_CLEANUP}; then
+if stage_is_finished "run_tests" && ${DRUPAL_TRAVIS_CLEANUP}; then
     clean_up
 fi

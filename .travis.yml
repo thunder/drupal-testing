@@ -17,9 +17,9 @@ branches:
 
 env:
   matrix:
-    - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
-    - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
-    - THUNDER_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
+    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
 
