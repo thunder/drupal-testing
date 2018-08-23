@@ -16,8 +16,8 @@ run would start from scratch.
 Parameter:
     STAGE                    The test stage to execute, defaults to run_test (all stages are executed).
                              If a stage depends on other stages, they will be automatically called.
-                             Possible values: prepare_environment, test_coding_style, build_project,
-                             install_project, start_web_server, run_tests
+                             Possible values: prepare, coding_style, build,
+                             install, start_web_server, run_tests
 Options:
     -h,  --help              Display this help.
     -nc,  --no-cleanup       Do not cleanup after successfull tests, defaults to false. Set to 1 if you
@@ -25,8 +25,8 @@ Options:
 
 Example:
     test-drupal-module                    Run everything.
-    test-drupal-module test_coding_style  Just test coding style.
-    test-drupal-module build_project      Build the projects docroot, but does not install or test yet.
+    test-drupal-module coding_style  Just test coding style.
+    test-drupal-module build      Build the projects docroot, but does not install or test yet.
 EOF
 
     exit 1
@@ -77,8 +77,8 @@ DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
 
 ### Source required files ###
 
-source $(get_script_dir)/../lib/environment.sh
-source $(get_script_dir)/../lib/testing-library.sh
+source $(get_script_dir)/../includes/environment.sh
+source $(get_script_dir)/../includes/testing-library.sh
 
 ### Run stage ###
 
