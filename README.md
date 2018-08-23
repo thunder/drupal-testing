@@ -1,4 +1,4 @@
-# Test drupal projects with travis
+# Test Drupal projects with travis
 
 [![Build Status](https://travis-ci.com/thunder/travis.svg?branch=master)](https://travis-ci.com/thunder/travis)
 
