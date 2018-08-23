@@ -114,13 +114,13 @@ move_assets() {
 }
 
 clean_up() {
-    if [ ${DRUPAL_TRAVIS_NO_CLEANUP} ]; then
+    if ${DRUPAL_TRAVIS_NO_CLEANUP}; then
         return
     fi
 
     docker rm -f -v selenium-for-tests
 
-    chmod u+w -R ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    chmod -R u+w ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
     rmdir ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}
@@ -165,8 +165,12 @@ _stage_prepare() {
     printf "Preparing environment\n\n"
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
-        printf "Starting selenium\n"
-        docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        printf "Starting web driver\n"
+        if ${TRAVIS} = true; then
+            docker run --detach --net host --name selenium-for-tests --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
+        else
+            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
+        fi
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
 
