@@ -17,7 +17,6 @@ branches:
 
 env:
   matrix:
-    - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/select2
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/custom_list
   global:
@@ -29,7 +28,6 @@ before_install:
   - composer config repositories.select2 git https://github.com/thunder/select2.git
   - composer config repositories.paragraph_features git https://github.com/thunder/paragraphs_features.git
   - composer config repositories.custom_list git https://github.com/thunder/custom_list.git
-  - composer require drupal/select2:dev-feature/new-travis-integration --no-update
   - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
   - composer require drupal/custom_list:dev-8.x-1.x --no-update
 

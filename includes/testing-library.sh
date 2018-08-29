@@ -12,8 +12,9 @@ stage_dependency() {
         [run_tests]="start_web_server"
         [start_web_server]="install"
         [install]="build"
-        [build]="coding_style"
-        [coding_style]="prepare"
+        [build]="prepare_build"
+        [prepare_build]="coding_style"
+        [coding_style]="setup"
     )
     echo ${deps[${1}]}
 }
@@ -161,8 +162,8 @@ run_stage() {
 
 ### The stages. Do not run these directly, use run_stage() to invoke. ###
 
-_stage_prepare() {
-    printf "Preparing environment\n\n"
+_stage_setup() {
+    printf "Setup environment\n\n"
 
     if  ! port_is_open ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT} ; then
         printf "Starting web driver\n"
@@ -224,18 +225,19 @@ _stage_coding_style() {
     fi
 }
 
-_stage_build() {
-    printf "Building project\n\n"
-
-    if [ ${TRAVIS} ]; then
+_stage_prepare_build() {
+    printf "Prepare composer.json\n\n"
+    if ${TRAVIS}; then
         composer global require hirak/prestissimo
     fi
 
     create_drupal_project
-
     composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-
     require_local_project
+}
+
+_stage_build() {
+    printf "Prepare build\n\n"
     composer_install
     move_assets
 }

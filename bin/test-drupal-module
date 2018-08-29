@@ -16,7 +16,7 @@ run would start from scratch.
 Parameter:
     STAGE                    The test stage to execute, defaults to run_test (all stages are executed).
                              If a stage depends on other stages, they will be automatically called.
-                             Possible values: prepare, coding_style, build,
+                             Possible values: setup, coding_style, prepare_build, build,
                              install, start_web_server, run_tests
 Options:
     -h,  --help              Display this help.
@@ -24,9 +24,9 @@ Options:
                              want to keep the installation.
 
 Example:
-    test-drupal-module                    Run everything.
+    test-drupal-module               Run everything.
     test-drupal-module coding_style  Just test coding style.
-    test-drupal-module build      Build the projects docroot, but does not install or test yet.
+    test-drupal-module build         Build the projects docroot, but does not install or test yet.
 EOF
 
     exit 1

@@ -78,11 +78,14 @@ depends on. Steps, that have already been executed will not be called again on s
 
 The steps are the following:
 
-### prepare
-Prepares the testing environment. Starts selenium and mysql if necessary and tweaks php on travis 
+### setup
+Setup the testing environment. Starts selenium and mysql if necessary and tweaks php on travis 
 
 ### coding_style
 Tests php and javascript coding styles
+
+### prepare_build
+Creates a drupal project and modifies the composer.json to contain the required modules.
 
 ### build
 Builds the drupal installation with drupal project, adds all dependencies from the module and calls composer install.
