@@ -29,7 +29,7 @@ If your module is called "my_module" add the following annotation to your test c
 
 ## Add a composer.json to your module. 
 We use that file to automate different things. We parse the module name from it and we will automatically download 
-required drupal modules before running the tests. If you require javascript libraries require them with [asset-packagist](https://asset-packagist.org)
+required drupal modules before running the tests.
 
 A composer.json could look like the following:
 
@@ -39,8 +39,7 @@ A composer.json could look like the following:
         "type": "drupal-module",
         "license": "GPL-2.0-or-later",
         "require": {
-            "drupal/another_module": "^2.0",
-            "npm-asset/javascript-library": "^1.0"
+            "drupal/another_module": "^2.0"
         }
     }
 
@@ -56,7 +55,7 @@ See below for possible configurations.
 # Differences to LionsAd/drupal_ti
 While the general approach is very similar to drupal_ti, we differ in some regards.
  
- - If you want to run deprecated TesBase classes, use drupal_ti.
+ - If you want to run deprecated TestBase classes, or if you want to run behat tests, use drupal_ti.
  - When using WebDriverTestBase and Drupal > 8.6 (which needs selenium instead of phantom.js) use this package.
  - If you want a simple travis.yml file, that works without any configuration, use this package.
  - You can directly use this for quickly running the tests locally as well! All you need is php command line client, composer, chromedriver and docker (or mysql running natively).
