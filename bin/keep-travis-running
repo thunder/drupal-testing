@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Travis test runs timeout after 600 seconds without output, to prevent this when a test takes longer than this
+# without outputting anything, force a simple output with 10 seconds safety buffer.
 while true
 do
     echo "."
