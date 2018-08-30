@@ -28,8 +28,6 @@ Example:
     test-drupal-module coding_style  Just test coding style.
     test-drupal-module build         Build the projects docroot, but does not install or test yet.
 EOF
-
-    exit 1
 }
 
 # Get exact location of script.
@@ -55,14 +53,16 @@ for i in "${@}"; do
     case ${i} in
         -h | -\? | --help)
             show_help
+            exit
         ;;
         -nc | --no-cleanup)
             DRUPAL_TRAVIS_NO_CLEANUP=${i}
             break
         ;;
         -?*)
-            echo "WARN: Unknown option (ignored): ${i}\n"
+            printf "Unknown option: ${i}\n"
             show_help
+            exit 1
         ;;
         *)
         # last option has to be the test stage
