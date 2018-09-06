@@ -16,9 +16,9 @@ DRUPAL_TRAVIS_COMPOSER_NAME=${DRUPAL_TRAVIS_COMPOSER_NAME:-$(jq -r .name ${DRUPA
 # vendor/myproject the project name will be myproject.
 DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(echo ${DRUPAL_TRAVIS_COMPOSER_NAME} | cut -d '/' -f 2)}
 
-# The phpunit test group, defaults to the project name. To provide multiple groups, concatenate them with comma:
+# The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
-DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP-${DRUPAL_TRAVIS_PROJECT_NAME}}
+DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP:-""}
 
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
