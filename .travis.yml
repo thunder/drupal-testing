@@ -1,5 +1,11 @@
 language: php
-sudo: required
+dist: xenial
+
+php:
+  - 7.2
+
+services:
+  - mysql
 
 cache:
   apt: true
@@ -7,9 +13,6 @@ cache:
   - "$HOME/.composer/cache"
   - "$HOME/.drush/cache"
   - "$HOME/.npm"
-
-php:
-  - 7.2
 
 branches:
   only:
