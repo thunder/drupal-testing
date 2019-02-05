@@ -126,6 +126,7 @@ require_local_project() {
 
     composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer config extra.enable-patching true --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require ${DRUPAL_TRAVIS_COMPOSER_NAME} *@dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
@@ -136,6 +137,7 @@ require_local_project() {
 
 composer_install() {
     COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    composer drupal:scaffold --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
 
 create_drupal_project() {
@@ -293,7 +295,7 @@ _stage_install() {
     local additional_drush_parameter=""
 
     PHP_OPTIONS="-d sendmail_path=$(which true)"
-    ${drush} site-install ${profile} --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
+    ${drush} site-install ${profile} -vvv --db-url=${SIMPLETEST_DB} --yes additional_drush_parameter
     ${drush} pm-enable simpletest
 }
 
