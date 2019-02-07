@@ -44,6 +44,9 @@ DRUPAL_TRAVIS_TEST_BASE_DIRECTORY=${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY:-/tmp/test
 # This directory gets removed after successful tests.
 DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY:-${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/install}
 
+# The directory, where the tests are located relative to the docroot. This will default to the project directory.
+DRUPAL_TRAVIS_TEST_LOCATION=${DRUPAL_TRAVIS_TEST_LOCATION:-""}
+
 # The directory, where lock files for finished stages will be saved, defaults to ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/finished-stages.
 # This directory gets removed after successful tests.
 DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY=${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY:-${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/finished-stages}

@@ -232,7 +232,7 @@ _stage_setup() {
 
     if [ -x "$(command -v phpenv)" ]; then
         printf "Configure php\n"
-        phpenv config-rm xdebug.ini
+        phpenv config-rm xdebug.ini || true
         # Needed for php 5.6 only. When we drop 5.6 support, this can be removed.
         echo 'always_populate_raw_post_data = -1' >> drupal.php.ini
         phpenv config-add drupal.php.ini
@@ -324,7 +324,8 @@ _stage_run_tests() {
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local runtests=${docroot}/core/scripts/run-tests.sh
     local settings_file=${docroot}/sites/default/settings.php
-    local project_test_directory=${docroot}/${project_type_directory}/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}
+    local test_location=${DRUPAL_TRAVIS_TEST_LOCATION:-${project_type_directory}/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}}
+    local project_test_directory=${docroot}/${test_location}
 
     case ${DRUPAL_TRAVIS_TEST_RUNNER} in
         "phpunit")
