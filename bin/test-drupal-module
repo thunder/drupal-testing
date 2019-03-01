@@ -1,101 +1,17 @@
 #!/usr/bin/env bash
 
-set -e
-
-### Functions ###
-
-# Output help to console.
-show_help() {
-    cat << EOF
-Usage:   ${0##*/} [-h|--help] [-nc|--no-cleanup] [STAGE]
-Run tests for a drupal project (module) in travis. This has to be called from the modules folder.
-It builds a drupal install with the module and runs all tests that are defined in the module directory.
-It needs a running mysql database and docker for the selenium container.
-You can run this multiple times with different stages, already executed stages will not be called
-again until run_tests stage has finished. After run_tests everything will be cleaned up, and another
-run would start from scratch.
-
-Parameter:
-    STAGE                    The test stage to execute, defaults to run_test (all stages are executed).
-                             If a stage depends on other stages, they will be automatically called.
-                             Possible values: setup, coding_style, prepare_build, build,
-                             install, start_web_server, run_tests
-Options:
-    -h,  --help              Display this help.
-    -nc,  --no-cleanup       Do not cleanup after successfull tests, defaults to false. Set to 1 if you
-                             want to keep the installation.
-
-Example:
-    test-drupal-module               Run everything.
-    test-drupal-module coding_style  Just test coding style.
-    test-drupal-module build         Build the projects docroot, but does not install or test yet.
-EOF
-}
-
 # Get exact location of script.
 get_script_dir() {
-    local dir
-    local source="${BASH_SOURCE[0]}"
-
-    # resolve $source until the file is no longer a symlink
-    while [ -h "$source" ]; do
-        dir="$( cd -P "$( dirname "$source" )" && pwd )"
-        source="$(readlink "$source")"
-
-        # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-        [[ $source != /* ]] && source="$dir/$source"
-    done
-    echo "$( cd -P "$( dirname "$source" )" && pwd )"
+    echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 }
 
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+TRANSPARENT='\033[0m'
+ME=${0##*/}
+CURRENT=test-drupal-project
 
-### Parse command arguments ###
+printf "${RED}*** Usage of ${ME} is deprecated please use ${CURRENT} instead. ***${TRANSPARENT}\n"
+printf "${YELLOW}Running ${CURRENT} instead.${TRANSPARENT}\n"
 
-for i in "${@}"; do
-    case ${i} in
-        -h | -\? | --help)
-            show_help
-            exit
-        ;;
-        -nc | --no-cleanup)
-            DRUPAL_TRAVIS_NO_CLEANUP=${i}
-            break
-        ;;
-        -?*)
-            printf "Unknown option: ${i}\n"
-            show_help
-            exit 1
-        ;;
-        *)
-        # last option has to be the test stage
-            DRUPAL_TRAVIS_TEST_STAGE=${i}
-            break
-    esac
-done
-
-### Fallback values ###
-
-DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
-
-### Source required files ###
-
-source $(get_script_dir)/../includes/environment.sh
-source $(get_script_dir)/../includes/testing-library.sh
-
-### Run stage ###
-
-cd ${DRUPAL_TRAVIS_PROJECT_BASEDIR}
-
-if ! stage_exists ${DRUPAL_TRAVIS_TEST_STAGE}; then
-    printf "Unknown stage '${1}'\n\n"
-    show_help
-    exit 1
-fi
-
-dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
-
-run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
-
-if stage_is_finished "run_tests" && ${DRUPAL_TRAVIS_CLEANUP}; then
-    clean_up
-fi
+source $(get_script_dir)/${CURRENT}

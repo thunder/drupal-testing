@@ -26,4 +26,4 @@ before_install:
   - composer global require thunder/travis
 
 script:
-  - test-drupal-module
+  - test-drupal-project

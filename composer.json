@@ -13,10 +13,12 @@
     ],
     "bin": [
         "bin/keep-travis-running",
+        "bin/test-drupal-project",
         "bin/test-drupal-module"
     ],
     "require": {
-        "burdamagazinorg/thunder-dev-tools": "~1.0.0",
+        "php": ">=7.0",
+        "drupal/coder": "^8.2.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
         "symfony/yaml": "^3.4"
     }

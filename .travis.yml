@@ -25,6 +25,7 @@ env:
     - DRUPAL_TRAVIS_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/scheduler_content_moderation_integration DRUPAL_TRAVIS_TEST_JAVASCRIPT=false
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
+    - DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN="*.md"
 
 before_install:
   - composer config repositories.drupal composer https://packages.drupal.org/8
@@ -41,7 +42,7 @@ install:
   - composer install
 
 script:
-  - test-drupal-module
+  - test-drupal-project
 
 notifications:
   email: false

@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+### Functions ###
+
+# Output help to console.
+show_help() {
+    cat << EOF
+Usage:   ${0##*/} [-h|--help] [-nc|--no-cleanup] [STAGE]
+Run tests for a drupal project (module) in travis. This has to be called from the modules folder.
+It builds a drupal install with the module and runs all tests that are defined in the module directory.
+It needs a running mysql database and docker for the selenium container.
+You can run this multiple times with different stages, already executed stages will not be called
+again until run_tests stage has finished. After run_tests everything will be cleaned up, and another
+run would start from scratch.
+
+Parameter:
+    STAGE                    The test stage to execute, defaults to run_test (all stages are executed).
+                             If a stage depends on other stages, they will be automatically called.
+                             Possible values: setup, coding_style, prepare_build, build,
+                             install, start_web_server, run_tests
+Options:
+    -h,  --help              Display this help.
+    -nc, --no-cleanup        Do not cleanup after successful tests. Set this option to keep the installation.
+    -co, --clean-only        Just run cleanup and exit.
+
+Example:
+    test-drupal-module               Run everything.
+    test-drupal-module coding_style  Just test coding style.
+    test-drupal-module build         Build the projects docroot, but does not install or test yet.
+EOF
+}
+
+# Get exact location of script.
+get_script_dir() {
+    echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+}
+
+### Parse command arguments ###
+
+for i in "${@}"; do
+    case ${i} in
+        -h | -\? | --help)
+            show_help
+            exit
+        ;;
+        -co | --clean-only)
+            clean_only=true
+        ;;
+        -nc | --no-cleanup)
+            DRUPAL_TRAVIS_CLEANUP=false
+        ;;
+        -v)
+            DRUPAL_TRAVIS_VERBOSE=true
+            set -o xtrace
+        ;;
+        -?*)
+            printf "Unknown option: ${i}\n"
+            show_help
+            exit 1
+        ;;
+        *)
+        # last option has to be the test stage
+            DRUPAL_TRAVIS_TEST_STAGE=${i}
+    esac
+done
+
+### Fallback values ###
+
+DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
+SCRIPT_DIR=$(get_script_dir)
+
+### Source required files ###
+
+source ${SCRIPT_DIR}/../configuration.sh
+
+for library in ${SCRIPT_DIR}/../lib/*.sh; do
+   source ${library}
+done
+
+if ${clean_only:-false}; then
+    clean_up
+    exit
+fi
+
+### Run stage ###
+
+cd ${DRUPAL_TRAVIS_PROJECT_BASEDIR}
+
+if ! stage_exists ${DRUPAL_TRAVIS_TEST_STAGE}; then
+    printf "Unknown stage '${1}'\n\n"
+    show_help
+    exit 1
+fi
+
+dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
+
+run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
+
+if stage_is_finished "run_tests" && ${DRUPAL_TRAVIS_CLEANUP}; then
+    clean_up
+fi
