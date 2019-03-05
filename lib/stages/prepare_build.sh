@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 _stage_prepare_build() {
-    # When we test a full project, we already have all dependencies we need within the projects composer.json
+    # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TRAVIS_PROJECT_TYPE} = "project" ]]; then
+        rsync --archive --exclude=".git" ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/ ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         return
     fi
 

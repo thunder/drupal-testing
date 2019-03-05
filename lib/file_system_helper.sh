@@ -24,9 +24,10 @@ get_composer_bin_directory() {
 
 get_project_test_location() {
     local docroot=$(get_distribution_docroot)
+    local project_type_test_location=""
 
-    if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} -ne "" ]]; then
-        echo "${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"
+    if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} != "" ]]; then
+        project_type_test_location="${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"
     else
         # Full projects will be tested in the docroot. Modules, themes and profiles in their sub folders.
         case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
@@ -42,6 +43,6 @@ get_project_test_location() {
              *)
                 project_type_test_location="${docroot}"
         esac
-        echo "${project_type_test_location}"
     fi
+    echo "${project_type_test_location}"
 }

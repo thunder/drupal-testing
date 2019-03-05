@@ -10,7 +10,7 @@ _stage_run_tests() {
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
     local project_test_location=$(get_project_test_location)
 
-    if [ ${DRUPAL_TRAVIS_TEST_GROUP} ]; then
+    if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
        test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
     fi
 

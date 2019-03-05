@@ -41,7 +41,7 @@ DRUPAL_TRAVIS_TEST_JAVASCRIPT=${DRUPAL_TRAVIS_TEST_JAVASCRIPT:-true}
 DRUPAL_TRAVIS_TEST_PHP=${DRUPAL_TRAVIS_TEST_PHP:-true}
 
 # The files pattern to ignore when testing php coding styles.
-DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendor/*,*.md}
+DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendor/*,*/core/*,*/autoload.php,*.md}
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported.
@@ -89,8 +89,12 @@ DRUPAL_TRAVIS_DATABASE_PORT=${DRUPAL_TRAVIS_DATABASE_PORT:-3306}
 # The database user. Defaults to travis, which is the default travis database user.
 DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
 
-# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default.
-DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
+# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
+if ${TRAVIS}; then
+    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
+else
+    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-"test"}
+fi
 
 # The database name. Defaults to drupaltesting
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
@@ -101,6 +105,9 @@ DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-databas
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
 DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
+
+# The directory where the configuration for the installation with existing config is located.
+DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY=${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY:-"../config/sync"}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
