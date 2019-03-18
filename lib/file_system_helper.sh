@@ -22,14 +22,13 @@ get_composer_bin_directory() {
     echo "${composer_bin_dir}"
 }
 
-get_project_test_location() {
+get_project_location() {
     local docroot=$(get_distribution_docroot)
     local project_type_test_location=""
 
     if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} != "" ]]; then
         project_type_test_location="${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"
     else
-        # Full projects will be tested in the docroot. Modules, themes and profiles in their sub folders.
         case ${DRUPAL_TRAVIS_PROJECT_TYPE} in
             drupal-module)
                 project_type_test_location="${docroot}/modules/contrib/${DRUPAL_TRAVIS_PROJECT_NAME}"

@@ -40,6 +40,9 @@ stage_dependency() {
             dep="install"
             ;;
         install)
+            dep="deprecation"
+            ;;
+        deprecation)
             dep="build"
             ;;
         build)

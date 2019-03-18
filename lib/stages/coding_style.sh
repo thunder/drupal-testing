@@ -23,16 +23,16 @@ __test_php_coding_styles() {
 }
 
 __test_javascript_coding_styles() {
-        if ! [[ -f .eslintrc ]]; then
-            printf "${YELLOW}No .eslintrc file found. Skipping javascript coding style test.${TRANSPARENT}\n\n"
-            return;
-        fi
+    if ! [[ -f .eslintrc ]]; then
+        printf "${YELLOW}No .eslintrc file found. Skipping javascript coding style test.${TRANSPARENT}\n\n"
+        return;
+    fi
 
-        printf "Checking javascript coding styles\n\n"
+    printf "Checking javascript coding styles\n\n"
 
-        if ! [[ -x "$(command -v eslint)" ]]; then
-            npm install -g eslint
-        fi
+    if ! [[ -x "$(command -v eslint)" ]]; then
+        npm install -g eslint
+    fi
 
-        eslint .
+    eslint .
 }

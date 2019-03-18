@@ -19,6 +19,12 @@ _stage_prepare_build() {
     composer require drupal/core:${DRUPAL_TRAVIS_DRUPAL_VERSION} --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer require webflo/drupal-core-require-dev:${DRUPAL_TRAVIS_DRUPAL_VERSION} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 
+    # Require phpstan.
+    if ${DRUPAL_TRAVIS_TEST_DEPRECATION}; then
+        composer require mglaman/phpstan-drupal:^0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer require phpstan/phpstan-deprecation-rules:^0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    fi
+
     # Add the local instance of the project into the repositories section and make sure it is used first.
     composer config repositories.0 path ${DRUPAL_TRAVIS_PROJECT_BASEDIR} --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     composer config repositories.1 composer https://packages.drupal.org/8 --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
