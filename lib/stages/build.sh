@@ -8,13 +8,17 @@ _stage_build() {
     local libraries=${docroot}/libraries;
 
     # Install all dependencies
-    COMPOSER_MEMORY_LIMIT=-1 composer install --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    COMPOSER_MEMORY_LIMIT=-1 composer install
 
     # Make sure, we have drupal scaffold files. Composer install should have taken care of it, but
     # this sometimes fails.
     if [[ ! -f ${docroot}/index.php ]]; then
-        composer drupal:scaffold --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer drupal:scaffold
     fi
+
+    # Back to previous directory.
+    cd -
 
     # Move downloaded frontend libraries to the correct folder within the web root. This is necessary, because the
     # drupal project composer.json does not provide the necessary configuration to do so.
