@@ -21,8 +21,9 @@ _stage_prepare_build() {
 
     # Require phpstan.
     if ${DRUPAL_TRAVIS_TEST_DEPRECATION}; then
+        composer require phpstan/phpstan:0.11.6 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
         composer require mglaman/phpstan-drupal:^0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
-        composer require phpstan/phpstan-deprecation-rules:^0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+        composer require phpstan/phpstan-deprecation-rules:0.11.1 --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     fi
 
     # Add the local instance of the project into the repositories section and make sure it is used first.
