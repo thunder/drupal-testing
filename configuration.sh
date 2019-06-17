@@ -32,6 +32,9 @@ DRUPAL_TRAVIS_TEST_GROUP=${DRUPAL_TRAVIS_TEST_GROUP:-""}
 # By default coding styles are tested.
 DRUPAL_TRAVIS_TEST_CODING_STYLES=${DRUPAL_TRAVIS_TEST_CODING_STYLES:-true}
 
+# The phpunit test filter to restrict the tests.
+DRUPAL_TRAVIS_TEST_FILTER=${DRUPAL_TRAVIS_TEST_FILTER:-""}
+
 # Boolean value if javascript coding style should be tested.
 # By default javascript coding styles are tested.
 DRUPAL_TRAVIS_TEST_JAVASCRIPT=${DRUPAL_TRAVIS_TEST_JAVASCRIPT:-true}

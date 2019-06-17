@@ -171,6 +171,10 @@ vendor/myproject the project name will be myproject. This will be used as defaul
 The phpunit test group, defaults to the value of ${DRUPAL_TRAVIS_PROJECT_NAME}. To provide multiple groups,
 concatenate them with comma:  DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
 
+- DRUPAL_TRAVIS_TEST_FILTER
+
+Only runs tests whose name matches the given regular expression pattern. Example: DRUPAL_TRAVIS_TEST_FILTER=TestCaseClass::testMethod
+
 - DRUPAL_TRAVIS_TEST_CODING_STYLES
 
 Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
@@ -181,7 +185,6 @@ By default coding styles are tested.
 
 Boolean value if javascript and php coding styles should be tested.
 By default all coding styles are tested.
-
 
 - DRUPAL_TRAVIS_TEST_BASE_DIRECTORY
 
