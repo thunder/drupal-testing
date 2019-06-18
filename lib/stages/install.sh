@@ -13,7 +13,7 @@ _stage_install() {
         ${drush} --verbose --db-url=${SIMPLETEST_DB} --existing-config --yes site-install
     else
         local profile="minimal"
-        ${drush} -v --db-url=${SIMPLETEST_DB} --yes site-install ${profile}
+        ${drush} -v --db-url=${SIMPLETEST_DB} --yes site-install ${profile} ${DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES}
     fi
 
     ${drush} pm-enable simpletest
