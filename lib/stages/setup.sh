@@ -10,7 +10,7 @@ _stage_setup() {
         if ${TRAVIS} = true; then
             docker run --detach --net host --name ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME} --volume /dev/shm:/dev/shm selenium/standalone-chrome:${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION}
         else
-            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} &
+            chromedriver --port=${DRUPAL_TRAVIS_SELENIUM_PORT} --url-base=/wd/hub &
         fi
 
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
