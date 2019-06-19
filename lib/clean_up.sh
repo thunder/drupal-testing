@@ -2,6 +2,7 @@
 
 clean_up() {
     printf "Cleaning up test environment.\n\n"
+
     if container_exists ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}; then
         docker rm -f -v ${DRUPAL_TRAVIS_SELENIUM_DOCKER_NAME}
     fi
@@ -17,6 +18,11 @@ clean_up() {
 
     if [[ -d ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY} ]]; then
         rm -rf ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    fi
+
+    if [[ -f ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver ]]; then
+        killall chromedriver
+        rm ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/chromedriver
     fi
 
     if [[ -d ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY} ]]; then
