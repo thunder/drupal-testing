@@ -103,18 +103,18 @@ DRUPAL_TRAVIS_DATABASE_PORT=${DRUPAL_TRAVIS_DATABASE_PORT:-3306}
 # The database user. Defaults to travis, which is the default travis database user.
 DRUPAL_TRAVIS_DATABASE_USER=${DRUPAL_TRAVIS_DATABASE_USER:-travis}
 
-# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
-if ${TRAVIS}; then
-    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
-else
-    DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-"test"}
-fi
-
 # The database name. Defaults to drupaltesting
 DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 
-# The name for the database docker container. Defaults to database-for-drupal-tests
-DRUPAL_TRAVIS_DATABASE_DOCKER_NAME=${DRUPAL_TRAVIS_DATABASE_DOCKER_NAME:-database-for-drupal-tests}
+# The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
+DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
+
+# The database engine to use. For travis runs this defaults to mysql, local runs will default to sqlite.
+if ${TRAVIS}; then
+    DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"mysql"}
+else
+    DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"sqlite"}
+fi
 
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
@@ -133,8 +133,13 @@ export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 # The url that simpletest will use.
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TRAVIS_HTTP_HOST}:${DRUPAL_TRAVIS_HTTP_PORT}}
 
-# The database string, that simpletest will use.
-export SIMPLETEST_DB=${SIMPLETEST_DB:-mysql://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
-
 # The driver args for webdriver.
 export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TRAVIS_SELENIUM_HOST}:${DRUPAL_TRAVIS_SELENIUM_PORT}/wd/hub\"]"}
+
+if [[ ${DRUPAL_TRAVIS_DATABASE_ENGINE} == 'sqlite' ]]; then
+    export SIMPLETEST_DB=${SIMPLETEST_DB:-${DRUPAL_TRAVIS_DATABASE_ENGINE}://${DRUPAL_TRAVIS_DATABASE_HOST}/${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/${DRUPAL_TRAVIS_DATABASE_NAME}.sqlite}
+else
+    export SIMPLETEST_DB=${SIMPLETEST_DB:-${DRUPAL_TRAVIS_DATABASE_ENGINE}://${DRUPAL_TRAVIS_DATABASE_USER}:${DRUPAL_TRAVIS_DATABASE_PASSWORD}@${DRUPAL_TRAVIS_DATABASE_HOST}:${DRUPAL_TRAVIS_DATABASE_PORT}/${DRUPAL_TRAVIS_DATABASE_NAME}}
+fi
+
+echo ${SIMPLETEST_DB}
