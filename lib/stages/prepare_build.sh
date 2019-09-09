@@ -40,8 +40,4 @@ _stage_prepare_build() {
     for dev_dependency in $(jq -r  '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json); do
         composer require ${dev_dependency} --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
     done
-
-    # Temporary fix for mink dependency. Has to be removed, if drupal core has sorted this out.
-    # See: https://www.drupal.org/project/drupal/issues/3078671
-    composer require "behat/mink-selenium2-driver:1.4.x-dev as 1.3.x-dev" --dev --no-update --working-dir=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
 }
