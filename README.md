@@ -48,7 +48,7 @@ Only not deprecated (as of drupal 8.6) TestBase classes are tested. Especially t
 is not supported, please use WebDriverTestBase instead. See [JavascriptTestBase is deprecated in favor of WebDriverTestBase](https://www.drupal.org/node/2945059)
 
 # Setup
-All you need to do is to copy the .travis.yaml.dist to your project root folder and rename it to .travis.yaml.
+All you need to do is to copy the [.travis.yaml.dist](https://github.com/thunder/travis/blob/master/.travis.yml.dist) to your project root folder and rename it to .travis.yaml.
 If your module meets all the prerequisites, you should be done. Otherwise you might need to provide some environment variables.
 See below for possible configurations.   
 
