@@ -110,6 +110,15 @@ dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
 
 run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
 
-if stage_is_finished "run_tests" && ${DRUPAL_TRAVIS_CLEANUP}; then
-    clean_up
+if ! stage_is_finished "run_tests"; then
+    exit
 fi
+
+# After run_tests, we either cleanup, or revert the run_tests stage.
+if ${DRUPAL_TRAVIS_CLEANUP}; then
+    clean_up
+else
+    reset_stage "run_tests"
+fi
+
+

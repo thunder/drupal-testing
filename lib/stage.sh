@@ -72,3 +72,12 @@ finish_stage() {
 
     touch ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
 }
+
+reset_stage() {
+    local stage="${1}"
+    local stage_locl_file="${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}"
+
+    if [[ -f "${stage_locl_file}" ]]; then
+        rm "${stage_locl_file}"
+    fi
+}
