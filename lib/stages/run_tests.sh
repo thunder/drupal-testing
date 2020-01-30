@@ -12,18 +12,18 @@ _stage_run_tests() {
     project_location=$(get_project_location)
 
     local test_selection=""
-    local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
+    local phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
 
-    if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
-       test_selection="${test_selection} --group ${DRUPAL_TRAVIS_TEST_GROUP}"
+    if [[ ${DRUPAL_TESTING_TEST_GROUP} ]]; then
+       test_selection="${test_selection} --group ${DRUPAL_TESTING_TEST_GROUP}"
     fi
 
-    if [[ -f ${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
-        export thunderDumpFile=${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE}
+    if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
+        export thunderDumpFile=${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}
     fi
 
-    if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then
-       test_selection="${test_selection} --filter ${DRUPAL_TRAVIS_TEST_FILTER}"
+    if [[ ${DRUPAL_TESTING_TEST_FILTER} ]]; then
+       test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
     local runtest="php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location}"

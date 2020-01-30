@@ -2,15 +2,15 @@
 
 # Test coding styles
 _stage_coding_style() {
-    if ! ${DRUPAL_TRAVIS_TEST_CODING_STYLES}; then
+    if ! ${DRUPAL_TESTING_TEST_CODING_STYLES}; then
         return
     fi
 
-    if ${DRUPAL_TRAVIS_TEST_PHP}; then
+    if ${DRUPAL_TESTING_TEST_PHP}; then
         __test_php_coding_styles
     fi
 
-    if ${DRUPAL_TRAVIS_TEST_JAVASCRIPT}; then
+    if ${DRUPAL_TESTING_TEST_JAVASCRIPT}; then
         __test_javascript_coding_styles
     fi
 }
@@ -18,8 +18,8 @@ _stage_coding_style() {
 __test_php_coding_styles() {
     printf "Checking php coding styles\n\n"
 
-    phpcs -ps --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --ignore=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN} .
-    phpcs -ps --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --ignore=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN} .
+    phpcs -ps --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --ignore=${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN} .
+    phpcs -ps --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --ignore=${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN} .
 }
 
 __test_javascript_coding_styles() {

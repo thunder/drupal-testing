@@ -1,6 +1,6 @@
 {
-    "name": "thunder/travis",
-    "description": "Travis scripts for testing drupal modules.",
+    "name": "thunder/drupal-testing",
+    "description": "Scripts for testing drupal projects.",
     "type": "library",
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
@@ -13,11 +13,10 @@
     ],
     "bin": [
         "bin/keep-travis-running",
-        "bin/test-drupal-project",
-        "bin/test-drupal-module"
+        "bin/test-drupal-project"
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.2",
         "drupal/coder": "^8.2.0",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
         "symfony/yaml": "^3.4"

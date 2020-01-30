@@ -60,22 +60,22 @@ stage_dependency() {
 }
 
 stage_is_finished() {
-    [[ -f "${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${1}" ]]
+    [[ -f "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${1}" ]]
 }
 
 finish_stage() {
     local stage="${1}"
 
-    if [[ ! -d ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY} ]]; then
-        mkdir -p ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}
+    if [[ ! -d ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY} ]]; then
+        mkdir -p ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}
     fi
 
-    touch ${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}
+    touch ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${stage}
 }
 
 reset_stage() {
     local stage="${1}"
-    local stage_locl_file="${DRUPAL_TRAVIS_LOCK_FILES_DIRECTORY}/${stage}"
+    local stage_locl_file="${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${stage}"
 
     if [[ -f "${stage_locl_file}" ]]; then
         rm "${stage_locl_file}"
