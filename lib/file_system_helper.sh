@@ -1,30 +1,36 @@
 #!/usr/bin/env bash
 
-# This has currently no real meaning, but will be necessary, once we test with thunder_project.
-# thunder_project builds into docroot instead of web.
+# Parameter is optional shellcheck disable=SC2120
 get_distribution_docroot() {
+    local absolute=${1:-true}
     local docroot="web"
 
-    if [[ ${DRUPAL_TRAVIS_DISTRIBUTION} = "thunder" ]]; then
+    if [[ ${DRUPAL_TRAVIS_COMPOSER_PROJECT} =~ ^thunder/thunder-project.* ]]; then
         docroot="docroot"
     fi
 
-    echo "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
+    if ${absolute}; then
+      echo "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
+    else
+      echo ${docroot}
+    fi
 }
 
 get_composer_bin_directory() {
-    if [[ ! -f ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json ]]; then
+    if [[ ! -f "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json ]]; then
         exit 1
     fi
 
-    local composer_bin_dir=${DRUPAL_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/composer.json)}
+    local composer_bin_dir=${DRUPAL_TRAVIS_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' "${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json)}
 
     echo "${composer_bin_dir}"
 }
 
 get_project_location() {
-    local docroot=$(get_distribution_docroot)
+    local docroot
     local project_type_test_location=""
+
+    docroot=$(get_distribution_docroot true)
 
     if [[ ${DRUPAL_TRAVIS_TEST_LOCATION} != "" ]]; then
         project_type_test_location="${docroot}/${DRUPAL_TRAVIS_TEST_LOCATION}"

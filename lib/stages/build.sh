@@ -20,8 +20,8 @@ _stage_build() {
         composer require drupal/core-composer-scaffold
     else
         composer require drupal-composer/drupal-scaffold
-        composer drupal:scaffold
     fi
+    composer drupal:scaffold
 
     # Back to previous directory.
     cd -

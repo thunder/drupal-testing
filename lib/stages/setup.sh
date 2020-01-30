@@ -38,9 +38,4 @@ _stage_setup() {
 
         wait_for_port ${DRUPAL_TRAVIS_SELENIUM_HOST} ${DRUPAL_TRAVIS_SELENIUM_PORT}
     fi
-
-    if [[ -x "$(command -v phpenv)" ]]; then
-        printf "Configure php\n"
-        phpenv config-rm xdebug.ini || true
-    fi
 }

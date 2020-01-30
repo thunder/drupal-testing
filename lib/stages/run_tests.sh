@@ -15,7 +15,11 @@ _stage_run_tests() {
     local phpunit=${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
 
     if [[ ${DRUPAL_TRAVIS_TEST_GROUP} ]]; then
-       test_selection="--group ${DRUPAL_TRAVIS_TEST_GROUP}"
+       test_selection="${test_selection} --group ${DRUPAL_TRAVIS_TEST_GROUP}"
+    fi
+
+    if [[ -f ${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE} ]]; then
+        export thunderDumpFile=${docroot}/${DRUPAL_TRAVIS_TEST_DUMP_FILE}
     fi
 
     if [[ ${DRUPAL_TRAVIS_TEST_FILTER} ]]; then

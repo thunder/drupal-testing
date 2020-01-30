@@ -2,11 +2,13 @@
 # Use this file as reference on what you can configure. You can set each of these variables in the environment
 # to override the default values.
 
-# Set ${TRAVIS} to false on non travis builds.
-TRAVIS=${TRAVIS:-false}
+# Set ${CI} to false on non CI builds, for github actions we need to provide a fallback. Github does not support the CI environment variable.
+CI=${CI:-${GITHUB_ACTIONS:-false}}
 
 # Generate more verbose output, defaults to false. Can also be set to true by providing the -v parameter to the invoking command.
 DRUPAL_TRAVIS_VERBOSE=${DRUPAL_TRAVIS_VERBOSE:-false}
+
+DRUPAL_TRAVIS_COMPOSER_PROJECT=${DRUPAL_TRAVIS_COMPOSER_PROJECT:-"drupal/recommended-project"}
 
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TRAVIS_PROJECT_BASEDIR=${DRUPAL_TRAVIS_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
@@ -14,15 +16,23 @@ DRUPAL_TRAVIS_PROJECT_BASEDIR=${DRUPAL_TRAVIS_PROJECT_BASEDIR:-${TRAVIS_BUILD_DI
 # The type of the project, could be "drupal-module" "drupal-theme" "drupal-profile" or "project".
 DRUPAL_TRAVIS_PROJECT_TYPE=${DRUPAL_TRAVIS_PROJECT_TYPE:-$(jq -er '.type // "project"' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
-# The distribution to use. Currently only drupal core is supported.
-DRUPAL_TRAVIS_DISTRIBUTION=${DRUPAL_TRAVIS_DISTRIBUTION:-drupal}
+# Setting this to a filename, creates a dump from an installation, that can be used by all tests, instead of reinstalling
+# for every test. This is currently supported only by the thunder distribution.
+DRUPAL_TRAVIS_TEST_DUMP_FILE=${DRUPAL_TRAVIS_TEST_DUMP_FILE:-""}
+
+# The drupal profile that is used in the tests.
+DRUPAL_TRAVIS_TEST_PROFILE=${DRUPAL_TRAVIS_TEST_PROFILE:-minimal}
+
+# If set to true, drush will install from exported config, otherwise the DRUPAL_TRAVIS_TESTING_PROFILE will be used on install.
+DRUPAL_TRAVIS_INSTALL_FROM_CONFIG=${DRUPAL_TRAVIS_INSTALL_FROM_CONFIG:-false}
 
 # The composer name of the current project, if not specified, it will be read from the composer.json.
 DRUPAL_TRAVIS_COMPOSER_NAME=${DRUPAL_TRAVIS_COMPOSER_NAME:-$(jq -r .name ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
-# The project name, if not provided, the second part of the composer name will be use. E.g. If the composer name is
+# The project name, if not provided, the "installer-name" property of the composer extra section is used.
+# Fallback value is the second part of the composer name will be use. E.g. If the composer name is
 # vendor/myproject the project name will be myproject.
-DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(echo ${DRUPAL_TRAVIS_COMPOSER_NAME} | cut -d '/' -f 2)}
+DRUPAL_TRAVIS_PROJECT_NAME=${DRUPAL_TRAVIS_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo ${DRUPAL_TRAVIS_COMPOSER_NAME} | cut -d '/' -f 2)"  '.extra."installer-name" // $FALLBACK' ${DRUPAL_TRAVIS_PROJECT_BASEDIR}/composer.json)}
 
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
@@ -51,7 +61,7 @@ DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN=${DRUPAL_TRAVIS_PHPCS_IGNORE_PATTERN:-*/vendo
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported.
-DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-^8.6}
+DRUPAL_TRAVIS_DRUPAL_VERSION=${DRUPAL_TRAVIS_DRUPAL_VERSION:-""}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.
@@ -76,7 +86,7 @@ DRUPAL_TRAVIS_HTTP_PORT=${DRUPAL_TRAVIS_HTTP_PORT:-8888}
 
 # Use selenium to spawn chromedriver. On travis we want to do that, to be able to use the selenium docker.
 # On local development calling chromedriver directly is more straight forward.
-DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${TRAVIS}}
+DRUPAL_TRAVIS_USE_SELENIUM=${DRUPAL_TRAVIS_USE_SELENIUM:-${CI}}
 
 # The selenium chrome docker version to use. defaults to the latest version.
 DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION=${DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
@@ -109,8 +119,8 @@ DRUPAL_TRAVIS_DATABASE_NAME=${DRUPAL_TRAVIS_DATABASE_NAME:-drupaltesting}
 # The database password for ${DRUPAL_TRAVIS_DATABASE_USER}, empty by default for travis.
 DRUPAL_TRAVIS_DATABASE_PASSWORD=${DRUPAL_TRAVIS_DATABASE_PASSWORD:-""}
 
-# The database engine to use. For travis runs this defaults to mysql, local runs will default to sqlite.
-if ${TRAVIS}; then
+# The database engine to use. For CI runs this defaults to mysql, local runs will default to sqlite.
+if ${CI}; then
     DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"mysql"}
 else
     DRUPAL_TRAVIS_DATABASE_ENGINE=${DRUPAL_TRAVIS_DATABASE_ENGINE:-"sqlite"}
@@ -124,7 +134,7 @@ DRUPAL_TRAVIS_CLEANUP=${DRUPAL_TRAVIS_CLEANUP:-true}
 DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY=${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY:-"../config/sync"}
 
 # Additional form values for the installation profile. This is uses by drush site-install.
-DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES={DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
+DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES=${DRUPAL_TRAVIS_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.

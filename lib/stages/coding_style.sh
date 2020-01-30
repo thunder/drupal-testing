@@ -30,8 +30,18 @@ __test_javascript_coding_styles() {
 
     printf "Checking javascript coding styles\n\n"
 
+    if ! [[ -x "$(command -v npm)" ]]; then
+        printf "npm not found, please install npm to test javascript coding styles\n"
+        return;
+    fi
+
     if ! [[ -x "$(command -v eslint)" ]]; then
         npm install -g eslint
+    fi
+
+    # Install ESLint requirements
+    if [[ `npm list -g | grep -c eslint-config-drupal-bundle` -eq 0 ]]; then
+        npm install -g eslint-config-drupal-bundle
     fi
 
     eslint .
