@@ -54,9 +54,10 @@ update the build-in bash with homebrew.
 
 Other requirements:
 
-- [jq](https://stedolan.github.io/jq/)
-- PHP > 7.2
-- (composer)(https://getcomposer.org/)
+    - [jq](https://stedolan.github.io/jq/)
+    - PHP > 7.2 + extensions needed by Drupal + sqlite extension, if no other database is used.
+    - [composer](https://getcomposer.org/)
+    - [node + npm](https://nodejs.org/en/)
  
 For using drupal-testing on travis all you need to do is to copy the [.travis.yaml.dist](https://github.com/thunder/drupal-testing/blob/master/.travis.yml.dist) 
 to your project root folder and rename it to .travis.yaml. If your module meets all the prerequisites, you should be done. Otherwise you might need to provide some environment variables.
