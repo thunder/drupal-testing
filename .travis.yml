@@ -25,8 +25,8 @@ env:
   global:
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
     - DRUPAL_TESTING_PHPCS_IGNORE_PATTERN="*.md"
-    - DRUPAL_TRAVIS_DATABASE_USER=travis
-    - DRUPAL_TRAVIS_DATABASE_NAME=drupaltesting
+    - DRUPAL_TESTING_DATABASE_USER=travis
+    - DRUPAL_TESTING_DATABASE_NAME=drupaltesting
 
 before_install:
   - composer config repositories.drupal composer https://packages.drupal.org/8
