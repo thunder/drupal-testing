@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Kill processes found by regex
+pkill() {
+    local pid
+    pid=$(ps ax | grep $1 | grep -v grep | awk '{ print $1 }')
+    kill -9 $pid
+    echo -n "Killed $1 (process $pid)"
+}
+
 clean_up() {
     printf "Cleaning up test environment.\n\n"
 

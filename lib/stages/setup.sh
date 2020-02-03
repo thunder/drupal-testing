@@ -12,7 +12,7 @@ download_chromedriver() {
     fi
 
     mkdir -p ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}
-    wget -q -O ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/${filename} https://chromedriver.storage.googleapis.com/${DRUPAL_TESTING_CHROMEDRIVER_VERSION}/${filename}
+    curl -s -o ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/${filename} https://chromedriver.storage.googleapis.com/${DRUPAL_TESTING_CHROMEDRIVER_VERSION}/${filename}
     unzip -o ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/${filename} -d ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}
     rm ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/${filename}
 }
