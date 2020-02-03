@@ -84,7 +84,7 @@ DRUPAL_TESTING_HTTP_HOST=${DRUPAL_TESTING_HTTP_HOST:-127.0.0.1}
 # The web server port. Defaults to 8888
 DRUPAL_TESTING_HTTP_PORT=${DRUPAL_TESTING_HTTP_PORT:-8888}
 
-# Use selenium to spawn chromedriver. On travis we want to do that, to be able to use the selenium docker.
+# Use selenium to spawn chromedriver. On CI environments we want to do that, to be able to use the selenium docker.
 # On local development calling chromedriver directly is more straight forward.
 DRUPAL_TESTING_USE_SELENIUM=${DRUPAL_TESTING_USE_SELENIUM:-${CI}}
 
@@ -119,12 +119,11 @@ DRUPAL_TESTING_DATABASE_NAME=${DRUPAL_TESTING_DATABASE_NAME:-testing}
 # The database password for ${DRUPAL_TESTING_DATABASE_USER}, empty by default.
 DRUPAL_TESTING_DATABASE_PASSWORD=${DRUPAL_TESTING_DATABASE_PASSWORD:-""}
 
-# The database engine to use. For CI runs this defaults to mysql, local runs will default to sqlite.
-if ${CI}; then
-    DRUPAL_TESTING_DATABASE_ENGINE=${DRUPAL_TESTING_DATABASE_ENGINE:-"mysql"}
-else
-    DRUPAL_TESTING_DATABASE_ENGINE=${DRUPAL_TESTING_DATABASE_ENGINE:-"sqlite"}
-fi
+# The database engine to use. Could be sqlite or mysql, postgres might be possible, but is not tested. 
+# If sqlite is used, no further configuration is necessary, otherwise you might need to set the variables 
+# DRUPAL_TESTING_DATABASE_HOST, DRUPAL_TESTING_DATABASE_PORT, DRUPAL_TESTING_DATABASE_USER, DRUPAL_TESTING_DATABASE_PASSWORD
+#  and DRUPAL_TESTING_DATABASE_PASSWORD
+DRUPAL_TESTING_DATABASE_ENGINE=${DRUPAL_TESTING_DATABASE_ENGINE:-"sqlite"}
 
 # By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 # this to true.
