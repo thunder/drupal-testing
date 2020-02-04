@@ -43,7 +43,8 @@ _stage_prepare_build() {
     fi
 
     # Add the local instance of the project into the repositories section.
-    composer config repositories.project path "${DRUPAL_TESTING_PROJECT_BASEDIR}" --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config repositories.0 path "${DRUPAL_TESTING_PROJECT_BASEDIR}" --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config repositories.1 composer https://packages.drupal.org/8 --working-dir="${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Enable patching
     composer config extra.enable-patching true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
