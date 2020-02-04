@@ -1,16 +1,17 @@
-# Test Drupal projects with travis
+# Test Drupal projects
 
-[![Build Status](https://travis-ci.com/thunder/travis.svg?branch=master)](https://travis-ci.com/thunder/travis)
+[![Build Status](https://travis-ci.com/thunder/drupal-testing.svg?branch=master)](https://travis-ci.com/thunder/drupal-testing)
 
 # Versions
 
-[![Latest Stable Version](https://poser.pugx.org/thunder/travis/v/stable)](https://packagist.org/packages/thunder/travis) 
-[![Latest Unstable Version](https://poser.pugx.org/thunder/travis/v/unstable)](https://packagist.org/packages/thunder/travis)
+[![Latest Stable Version](https://poser.pugx.org/thunder/drupal-testing/v/stable)](https://packagist.org/packages/thunder/drupal-testing) 
+[![Latest Unstable Version](https://poser.pugx.org/thunder/drupal-testing/v/unstable)](https://packagist.org/packages/thunder/drupal-testing)
 
 # About
 
-Use this package to simplify your drupal module testing on travis. This will run all your standard drupal test on travis
-and additionally check your source code for drupal coding style guidelines.
+Use this package to simplify your drupal project testing. This will run all your standard drupal test and additionally 
+check your source code for drupal coding style guidelines. It can be used to locally run those tests, or on CI platforms
+like travis or in github actions. 
 
 # Prerequisites
 
@@ -48,8 +49,18 @@ Only not deprecated (as of drupal 8.6) TestBase classes are tested. Especially t
 is not supported, please use WebDriverTestBase instead. See [JavascriptTestBase is deprecated in favor of WebDriverTestBase](https://www.drupal.org/node/2945059)
 
 # Setup
-All you need to do is to copy the [.travis.yaml.dist](https://github.com/thunder/travis/blob/master/.travis.yml.dist) to your project root folder and rename it to .travis.yaml.
-If your module meets all the prerequisites, you should be done. Otherwise you might need to provide some environment variables.
+Make sure, that you have bash 4 installed or greater. On most systems this will be the case. But on MacOS you need to
+update the build-in bash with homebrew. 
+
+Other requirements:
+
+    - [jq](https://stedolan.github.io/jq/)
+    - PHP > 7.2 + extensions needed by Drupal + sqlite extension, if no other database is used.
+    - [composer](https://getcomposer.org/)
+    - [node + npm](https://nodejs.org/en/)
+ 
+For using drupal-testing on travis all you need to do is to copy the [.travis.yaml.dist](https://github.com/thunder/drupal-testing/blob/master/.travis.yml.dist) 
+to your project root folder and rename it to .travis.yaml. If your module meets all the prerequisites, you should be done. Otherwise you might need to provide some environment variables.
 See below for possible configurations.   
 
 # Differences to LionsAd/drupal_ti
@@ -58,23 +69,22 @@ While the general approach is very similar to drupal_ti, we differ in some regar
  - If you want to run deprecated TestBase classes, or if you want to run behat tests, use drupal_ti.
  - When using WebDriverTestBase and Drupal > 8.6 (which needs selenium instead of phantom.js) use this package.
  - If you want a simple travis.yml file, that works without any configuration, use this package.
- - You can directly use this for quickly running the tests locally as well! All you need is php command line client, composer, chromedriver and docker (or mysql running natively).
-   If you have all this installed on your local machine, just do <code>composer global require thunder/travis</code> add the global 
-   composer directory to your $PATH and call <code>test-drupal-project</code> from within your modules directory. Everything will be build, installed
-   and tested automatically.
+ - You can directly use this for quickly running the tests locally and on other CI environments as well! Just do 
+   <code>composer global require thunder/drupal-testing</code> add the global composer directory to your $PATH and call 
+   <code>test-drupal-project</code> from within your modules directory. Everything will be build, installed and tested
+   automatically.
  
 # Configuration
 
-We try to run without configuration as much as possible, but we still have a lot of configuration options, if your module
-requires some special treatment, or if your testing environment is not travis (or travis changed some default values)
-or if you want to split up the testing process into multiple steps.
+We try to run without configuration as much as possible. But we still have a lot of configuration options, if your module
+requires some special treatment, or if your testing environment is not travis/github (or they changed some default values).
 
 ## Steps
-The simplest way to run the tests is to just call <code>test_drupal_module</code> in your .travis.yml. 
+The simplest way to run the tests is to just call <code>test_drupal_project</code> in your .travis.yml. 
 This will do everything, but it is actually divided into several steps which can be called separately by providing the
-step as a parameter: <code>test_drupal_module build</code> would call the build step and any steps that the build step
+step as a parameter: <code>test_drupal_project build</code> would call the build step and any steps that the build step
 depends on. Steps, that have already been executed will not be called again on subsequent call. So, if you call
-<code>test_drupal_module start_web_server</code> next, all steps up to the build step will not be executed.
+<code>test_drupal_project start_web_server</code> next, all steps up to the build step will not be executed.
 
 The steps are the following:
 
@@ -91,7 +101,7 @@ Creates a drupal project and modifies the composer.json to contain the required 
 Builds the drupal installation with drupal project, adds all dependencies from the module and calls composer install.
 
 ### install
-Installs drupal with the minimal profile, as required by simpletest module. Enables simpletest module
+Installs drupal with the minimal profile or the one that has been configured.
 
 ### start_web_server
 Starts a webserver pointing to the installed drupal.
@@ -102,8 +112,8 @@ Runs the tests
 This is also the order of the step dependencies, coding_style depends on prepare, build depends on coding_style and
 prepare, and so on.
 
-A very common use case for splitting the execution into steps is, to stop after the build step, and add custom build
-operations (e.g. downloading dependencies, that cannot be installed by composer) and the continue later.
+A very common use case for splitting the execution into steps is to stop after the build step, and add custom build
+operations (e.g. downloading dependencies, that cannot be installed by composer) and then continue later.
 An example for such a custom .travis.yml would be:
 
     language: php
@@ -128,7 +138,7 @@ An example for such a custom .travis.yml would be:
         - PATH="$PATH:$HOME/.composer/vendor/bin"
 
     before_install:
-      - composer global require thunder/travis
+      - composer global require thunder/drupal-testing
 
     install:
       - test-drupal-project build
@@ -145,82 +155,82 @@ You can configure your tests with several environment variables, most of them ar
 tests in different environments then travis. You can change database credentials, server hosts and ports, some
 installation paths and the test setup. All those variables should work out of the box when running on travis with
 a module, that has a correct composer.json and the test group set to the module name (see prerequisites for more
-informations). Variables can be set in the env section of the .travis.yml.
+information). Variables can be set in the env section of the .travis.yml.
 
 ## Available variables
 
-Find all defined variables in [configuration.sh](https://github.com/thunder/travis/blob/master/configuration.sh)
+Find all defined variables in [configuration.sh](https://github.com/thunder/drupal-testing/blob/master/configuration.sh)
 
 Some interesting variables are:
 
-- DRUPAL_TRAVIS_PROJECT_BASEDIR
+- DRUPAL_TESTING_PROJECT_BASEDIR
 
-The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
+The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current
+directory.
 
-- DRUPAL_TRAVIS_COMPOSER_NAME
+- DRUPAL_TESTING_COMPOSER_NAME
 
 The composer name of the current project, if not specified, it will be read from the composer.json.
 
-- DRUPAL_TRAVIS_PROJECT_NAME
+- DRUPAL_TESTING_PROJECT_NAME
 
 The project name, if not provided, the second part of the composer name will be use. E.g. If the composer name is
-vendor/myproject the project name will be myproject. This will be used as default test group
+vendor/myproject the project name will be myproject. This will be used as default test group.
 
-- DRUPAL_TRAVIS_TEST_GROUP
+- DRUPAL_TESTING_TEST_GROUP
 
-The phpunit test group, defaults to the value of ${DRUPAL_TRAVIS_PROJECT_NAME}. To provide multiple groups,
-concatenate them with comma:  DRUPAL_TRAVIS_TEST_GROUP="mygroup1,mygroup2"
+The phpunit test group, defaults to the value of ${DRUPAL_TESTING_PROJECT_NAME}. To provide multiple groups,
+concatenate them with comma:  DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
 
-- DRUPAL_TRAVIS_TEST_FILTER
+- DRUPAL_TESTING_TEST_FILTER
 
-Only runs tests whose name matches the given regular expression pattern. Example: DRUPAL_TRAVIS_TEST_FILTER=TestCaseClass::testMethod
+Only runs tests whose name matches the given regular expression pattern. 
+Example: DRUPAL_TESTING_TEST_FILTER=TestCaseClass::testMethod
 
-- DRUPAL_TRAVIS_TEST_CODING_STYLES
+- DRUPAL_TESTING_TEST_CODING_STYLES
 
 Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 By default coding styles are tested.
 
-- DRUPAL_TRAVIS_TEST_JAVASCRIPT
-- DRUPAL_TRAVIS_TEST_PHP
+- DRUPAL_TESTING_TEST_JAVASCRIPT
+- DRUPAL_TESTING_TEST_PHP
 
-Boolean value if javascript and php coding styles should be tested.
-By default all coding styles are tested.
+Boolean values if javascript and php coding styles should be tested. By default all coding styles are tested.
 
-- DRUPAL_TRAVIS_TEST_BASE_DIRECTORY
+- DRUPAL_TESTING_TEST_BASE_DIRECTORY
 
-The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
+The base directory for all generated files. Drupal will be installed into this directory. This directory and its 
+contents get removed after a successful tests.
+
+- DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY
+
+The directory, where drupal will be installed, defaults to ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/install
 This directory gets removed after successful tests.
 
-- DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY
-
-The directory, where drupal will be installed, defaults to ${DRUPAL_TRAVIS_TEST_BASE_DIRECTORY}/install
-This directory gets removed after successful tests.
-
-- DRUPAL_TRAVIS_HTTP_HOST
-- DRUPAL_TRAVIS_HTTP_PORT
+- DRUPAL_TESTING_HTTP_HOST
+- DRUPAL_TESTING_HTTP_PORT
 
 The web server host and port. Defaults to 127.0.0.1 and 8888
 
-- DRUPAL_TRAVIS_SELENIUM_CHROME_VERSION
+- DRUPAL_TESTING_SELENIUM_CHROME_VERSION
 
 The selenium chrome docker version to use. defaults to the latest version.
 
-- DRUPAL_TRAVIS_SELENIUM_HOST
-- DRUPAL_TRAVIS_SELENIUM_PORT
+- DRUPAL_TESTING_SELENIUM_HOST
+- DRUPAL_TESTING_SELENIUM_PORT
 
 The selenium host and port. Defaults to the web server host and port 4444.
 
-- DRUPAL_TRAVIS_DATABASE_HOST
-- DRUPAL_TRAVIS_DATABASE_PORT
-- DRUPAL_TRAVIS_DATABASE_USER
-- DRUPAL_TRAVIS_DATABASE_PASSWORD
-- DRUPAL_TRAVIS_DATABASE_NAME
+- DRUPAL_TESTING_DATABASE_HOST
+- DRUPAL_TESTING_DATABASE_PORT
+- DRUPAL_TESTING_DATABASE_USER
+- DRUPAL_TESTING_DATABASE_PASSWORD
+- DRUPAL_TESTING_DATABASE_NAME
 
-The database information. Defaults to the web server host, port 3306, user travis and empty password.
-This is the default configuration for the travis php environment. The database name is set to drupaltesting.
-If you run your tests locally, you might want to change these to your local mysql installation.
+The database information. Defaults to the web server host, port 3306, user testing and empty password. The database name
+is set to testing. If you run your tests locally, you might want to change these to your local mysql installation.
 
-- DRUPAL_TRAVIS_CLEANUP
+- DRUPAL_TESTING_CLEANUP
 
 By default all created files are deleted after successful test runs, you can disable this behaviour by setting
 this to false.
@@ -233,7 +243,7 @@ The default value is "week" to ignore any deprecation notices.
 
 - MINK_DRIVER_ARGS_WEBDRIVER
 
-The driver args for webdriver. You might chnage this, when rennung your own chromedriver / selenium instance.
+The driver args for webdriver. You might change this, when running your own chromedriver / selenium instance.
 
 Example .travis.yml with some variables set:
 
@@ -271,7 +281,7 @@ Example .travis.yml with some variables set:
         - env: SYMFONY_DEPRECATIONS_HELPER=0
 
     before_install:
-      - composer global require thunder/travis
+      - composer global require thunder/drupal-testing
 
     script:
       - test-drupal-project

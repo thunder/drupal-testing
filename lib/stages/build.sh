@@ -8,7 +8,7 @@ _stage_build() {
     local libraries=${docroot}/libraries;
 
     # Install all dependencies
-    cd ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}
+    cd ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}
     composer update
 
     local installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
@@ -32,20 +32,20 @@ _stage_build() {
         mkdir ${libraries}
     fi
 
-    if [[ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]]; then
-        mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
+    if [[ -d ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]]; then
+        mv ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
     fi
 
-    if [[ -d ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]]; then
-        mv ${DRUPAL_TRAVIS_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
+    if [[ -d ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]]; then
+        mv ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
     fi
 
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
     if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt 7 ]]; then
-        echo "\$settings['config_sync_directory'] = '${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY}';" >> ${sites_directory}/settings.php
+        echo "\$settings['config_sync_directory'] = '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}';" >> ${sites_directory}/settings.php
     else
-        echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TRAVIS_CONFIG_SYNC_DIRECTORY}' ];" >> ${sites_directory}/settings.php
+        echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}' ];" >> ${sites_directory}/settings.php
     fi
 }

@@ -10,9 +10,8 @@ set -o nounset
 show_help() {
     cat << EOF
 Usage:   ${0##*/} [-h|--help] [-nc|--no-cleanup] [STAGE]
-Run tests for a drupal project (module) in travis. This has to be called from the modules folder.
-It builds a drupal install with the module and runs all tests that are defined in the module directory.
-It needs a running mysql database and docker for the selenium container.
+Run tests for a drupal project (module, ditribution or full project). This has to be called from the projects folder.
+It builds a drupal installation and runs all tests that are defined in the projects directory.
 You can run this multiple times with different stages, already executed stages will not be called
 again until run_tests stage has finished. After run_tests everything will be cleaned up, and another
 run would start from scratch.
@@ -61,10 +60,10 @@ for i in "${@}"; do
             clean_only=true
         ;;
         -nc | --no-cleanup)
-            DRUPAL_TRAVIS_CLEANUP=false
+            DRUPAL_TESTING_CLEANUP=false
         ;;
         -v)
-            DRUPAL_TRAVIS_VERBOSE=true
+            DRUPAL_TESTING_VERBOSE=true
             set -o xtrace
         ;;
         -?*)
@@ -74,13 +73,13 @@ for i in "${@}"; do
         ;;
         *)
         # last option has to be the test stage
-            DRUPAL_TRAVIS_TEST_STAGE=${i}
+            DRUPAL_TESTING_TEST_STAGE=${i}
     esac
 done
 
 ### Fallback values ###
 
-DRUPAL_TRAVIS_TEST_STAGE=${DRUPAL_TRAVIS_TEST_STAGE:-run_tests}
+DRUPAL_TESTING_TEST_STAGE=${DRUPAL_TESTING_TEST_STAGE:-run_tests}
 SCRIPT_DIR=$(get_script_dir)
 
 ### Source required files ###
@@ -98,24 +97,24 @@ fi
 
 ### Run stage ###
 
-cd ${DRUPAL_TRAVIS_PROJECT_BASEDIR}
+cd ${DRUPAL_TESTING_PROJECT_BASEDIR}
 
-if ! stage_exists ${DRUPAL_TRAVIS_TEST_STAGE}; then
+if ! stage_exists ${DRUPAL_TESTING_TEST_STAGE}; then
     printf "Unknown stage '${1}'\n\n"
     show_help
     exit 1
 fi
 
-dependency=$(stage_dependency ${DRUPAL_TRAVIS_TEST_STAGE})
+dependency=$(stage_dependency ${DRUPAL_TESTING_TEST_STAGE})
 
-run_stage ${DRUPAL_TRAVIS_TEST_STAGE}
+run_stage ${DRUPAL_TESTING_TEST_STAGE}
 
 if ! stage_is_finished "run_tests"; then
     exit
 fi
 
 # After run_tests, we either cleanup, or revert the run_tests stage.
-if ${DRUPAL_TRAVIS_CLEANUP}; then
+if ${DRUPAL_TESTING_CLEANUP}; then
     clean_up
 else
     reset_stage "run_tests"
