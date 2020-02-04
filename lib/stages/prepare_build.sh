@@ -31,7 +31,7 @@ _stage_prepare_build() {
     fi
 
     composer require drush/drush --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer require brianium/paratest:^2 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require brianium/paratest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Install without core-composer-scaffold until we know, what version of core is used.
     composer remove drupal/core-composer-scaffold --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
