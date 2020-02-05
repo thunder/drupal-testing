@@ -5,7 +5,7 @@ _stage_prepare_build() {
     docroot=$(get_distribution_docroot false)
 
     # When we test a full project, all we need is the project files itself.
-    if [[ ${DRUPAL_TESTING_PROJECT_TYPE} = "project" ]]; then
+    if [[ ${DRUPAL_TESTING_PROJECT_TYPE} == "project" ]]; then
         rsync --archive --exclude=".git" "${DRUPAL_TESTING_PROJECT_BASEDIR}"/ "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         return
     fi
@@ -20,7 +20,7 @@ _stage_prepare_build() {
         composer config extra."installer-types".0 bower-asset --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         composer config extra."installer-types".1 npm-asset --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
-        jq '.extra."installer-paths"."'"${docroot}"'/libraries/{$name}" += ["type:bower-asset", "type:npm-asset"]' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" > "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.tmp"
+        jq '.extra."installer-paths"."'"${docroot}"'/libraries/{$name}" += ["type:bower-asset", "type:npm-asset"]' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" >"${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.tmp"
         mv "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.tmp" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
 
         composer require oomphinc/composer-installers-extender --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
@@ -28,9 +28,9 @@ _stage_prepare_build() {
 
     # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
     if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
-      composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-      composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-      composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
     composer require drush/drush --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
@@ -56,7 +56,7 @@ _stage_prepare_build() {
     composer require "${DRUPAL_TESTING_COMPOSER_NAME}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
-    for dev_dependency in $(jq -r  '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
+    for dev_dependency in $(jq -r '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
         composer require "${dev_dependency}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     done
 }
