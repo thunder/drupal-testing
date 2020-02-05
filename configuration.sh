@@ -14,7 +14,7 @@ DRUPAL_TESTING_COMPOSER_PROJECT=${DRUPAL_TESTING_COMPOSER_PROJECT:-"drupal/recom
 DRUPAL_TESTING_PROJECT_BASEDIR=${DRUPAL_TESTING_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
 
 # The type of the project, could be "drupal-module" "drupal-theme" "drupal-profile" or "project".
-DRUPAL_TESTING_PROJECT_TYPE=${DRUPAL_TESTING_PROJECT_TYPE:-$(jq -er '.type // "project"' ${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json)}
+DRUPAL_TESTING_PROJECT_TYPE=${DRUPAL_TESTING_PROJECT_TYPE:-$(jq -er '.type // "project"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json)}
 
 # Setting this to a filename, creates a dump from an installation, that can be used by all tests, instead of reinstalling
 # for every test. This is currently supported only by the thunder distribution.
