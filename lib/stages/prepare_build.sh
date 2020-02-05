@@ -5,7 +5,7 @@ _stage_prepare_build() {
     docroot=$(get_distribution_docroot false)
 
     # When we test a full project, all we need is the project files itself.
-    if [[ ${DRUPAL_TESTING_PROJECT_TYPE} = "project" ]]; then
+    if [[ ${DRUPAL_TESTING_PROJECT_TYPE} == "project" ]]; then
         rsync --archive --exclude=".git" "${DRUPAL_TESTING_PROJECT_BASEDIR}"/ "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         return
     fi

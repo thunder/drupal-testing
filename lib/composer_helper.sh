@@ -5,7 +5,7 @@ function composer_repository_exists() {
 
     # Use jq to find all defined repositories in composer.json.
     for url in $(jq '.repositories | keys[] as $k | "\(.[$k] | .url)"' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"); do
-        if [[ ${url} = '"'${repository_url}'"' ]]; then
+        if [[ ${url} == '"'${repository_url}'"' ]]; then
             true
             return
         fi

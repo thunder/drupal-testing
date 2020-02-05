@@ -39,7 +39,7 @@ get_script_dir() {
     local source="${BASH_SOURCE[0]}"
 
     # resolve $source until the file is no longer a symlink
-    while [[ -L "${source}" ]]; do
+    while [[ -L ${source} ]]; do
         dir="$(cd -P "$(dirname "${source}")" && pwd)"
         source="$(readlink "$source")"
 

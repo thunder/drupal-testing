@@ -9,7 +9,7 @@ run_stage() {
 
     local dependency=$(stage_dependency ${stage})
 
-    if [[ ! -z ${dependency} ]]; then
+    if [[ -n ${dependency} ]]; then
         run_stage ${dependency}
     fi
 
@@ -77,7 +77,7 @@ reset_stage() {
     local stage="${1}"
     local stage_locl_file="${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${stage}"
 
-    if [[ -f "${stage_locl_file}" ]]; then
+    if [[ -f ${stage_locl_file} ]]; then
         rm "${stage_locl_file}"
     fi
 }

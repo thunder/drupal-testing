@@ -30,9 +30,9 @@ function wait_for_container() {
 
     while
         local status=$(get_container_health ${container})
-        [[ ${status} != "\"healthy\"" ]]
+        [[ ${status} != '"healthy"' ]]
     do
-        if [[ ${status} == "\"unhealthy\"" ]]; then
+        if [[ ${status} == '"unhealthy"' ]]; then
             printf "Container ${container} failed to start. \n"
             exit 1
         fi
