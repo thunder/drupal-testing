@@ -10,9 +10,9 @@ get_distribution_docroot() {
     fi
 
     if ${absolute}; then
-      echo "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
+        echo "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
     else
-      echo ${docroot}
+        echo ${docroot}
     fi
 }
 
@@ -36,17 +36,18 @@ get_project_location() {
         project_type_test_location="${docroot}/${DRUPAL_TESTING_TEST_LOCATION}"
     else
         case ${DRUPAL_TESTING_PROJECT_TYPE} in
-            drupal-module)
-                project_type_test_location="${docroot}/modules/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
-                ;;
-            drupal-profile)
-                project_type_test_location="${docroot}/profiles/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
-                ;;
-            drupal-theme)
-                project_type_test_location="${docroot}/themes/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
-                ;;
-             *)
-                project_type_test_location="${docroot}"
+        drupal-module)
+            project_type_test_location="${docroot}/modules/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
+            ;;
+        drupal-profile)
+            project_type_test_location="${docroot}/profiles/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
+            ;;
+        drupal-theme)
+            project_type_test_location="${docroot}/themes/contrib/${DRUPAL_TESTING_PROJECT_NAME}"
+            ;;
+        *)
+            project_type_test_location="${docroot}"
+            ;;
         esac
     fi
     echo "${project_type_test_location}"

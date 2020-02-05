@@ -3,32 +3,35 @@
 # Functions to manage docker container
 
 # Test if docker container exist, might be running or stopped
-function container_exists {
+function container_exists() {
     [[ "$(docker ps -a -q -f name=^/${1}\$)" ]]
 }
 
 # Test if container is running
-function container_is_running {
+function container_is_running() {
     [[ "$(docker ps -q -f name=^/${1}\$)" ]]
 }
 
 # Test if a container exists, but is stopped
-function container_is_stopped {
+function container_is_stopped() {
     [[ "$(docker ps -aq -f status=exited -f name=^/${1}\$)" ]]
 }
 
 # Test docker container health status
-function get_container_health {
+function get_container_health() {
     docker inspect --format "{{json .State.Health.Status }}" ${1}
 }
 
 # Wait till docker container is fully started
-function wait_for_container {
+function wait_for_container() {
     local container=${1}
 
     printf "Waiting for container ${container}."
 
-    while local status=$(get_container_health ${container}); [[ ${status} != "\"healthy\"" ]]; do
+    while
+        local status=$(get_container_health ${container})
+        [[ ${status} != "\"healthy\"" ]]
+    do
         if [[ ${status} == "\"unhealthy\"" ]]; then
             printf "Container ${container} failed to start. \n"
             exit 1

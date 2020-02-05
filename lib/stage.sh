@@ -24,7 +24,7 @@ stage_exists() {
     local stage="${1}"
 
     source ${SCRIPT_DIR}/../lib/stages/${stage}.sh
-    declare -f -F _stage_${stage} > /dev/null
+    declare -f -F _stage_${stage} >/dev/null
 
     return ${?}
 }
@@ -33,27 +33,27 @@ stage_dependency() {
     local dep=""
 
     case ${1} in
-        run_tests)
-            dep="start_web_server"
-            ;;
-        start_web_server)
-            dep="install"
-            ;;
-        install)
-            dep="deprecation"
-            ;;
-        deprecation)
-            dep="build"
-            ;;
-        build)
-            dep="prepare_build"
-            ;;
-        prepare_build)
-            dep="setup"
-            ;;
-        setup)
-            dep="coding_style"
-            ;;
+    run_tests)
+        dep="start_web_server"
+        ;;
+    start_web_server)
+        dep="install"
+        ;;
+    install)
+        dep="deprecation"
+        ;;
+    deprecation)
+        dep="build"
+        ;;
+    build)
+        dep="prepare_build"
+        ;;
+    prepare_build)
+        dep="setup"
+        ;;
+    setup)
+        dep="coding_style"
+        ;;
     esac
 
     echo "${dep}"

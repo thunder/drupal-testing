@@ -7,7 +7,7 @@ _stage_start_web_server() {
     local docroot=$(get_distribution_docroot)
     local drush="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
-    if  ! port_is_open ${DRUPAL_TESTING_HTTP_HOST} ${DRUPAL_TESTING_HTTP_PORT}; then
+    if ! port_is_open ${DRUPAL_TESTING_HTTP_HOST} ${DRUPAL_TESTING_HTTP_PORT}; then
         local runserver_flags=""
 
         if ! ${DRUPAL_TESTING_VERBOSE}; then
@@ -18,4 +18,3 @@ _stage_start_web_server() {
         wait_for_port ${DRUPAL_TESTING_HTTP_HOST} ${DRUPAL_TESTING_HTTP_PORT}
     fi
 }
-

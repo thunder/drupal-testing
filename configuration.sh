@@ -32,7 +32,7 @@ DRUPAL_TESTING_COMPOSER_NAME=${DRUPAL_TESTING_COMPOSER_NAME:-$(jq -r .name ${DRU
 # The project name, if not provided, the "installer-name" property of the composer extra section is used.
 # Fallback value is the second part of the composer name will be use. E.g. If the composer name is
 # vendor/myproject the project name will be myproject.
-DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo ${DRUPAL_TESTING_COMPOSER_NAME} | cut -d '/' -f 2)"  '.extra."installer-name" // $FALLBACK' ${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json)}
+DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo ${DRUPAL_TESTING_COMPOSER_NAME} | cut -d '/' -f 2)" '.extra."installer-name" // $FALLBACK' ${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json)}
 
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
@@ -119,8 +119,8 @@ DRUPAL_TESTING_DATABASE_NAME=${DRUPAL_TESTING_DATABASE_NAME:-testing}
 # The database password for ${DRUPAL_TESTING_DATABASE_USER}, empty by default.
 DRUPAL_TESTING_DATABASE_PASSWORD=${DRUPAL_TESTING_DATABASE_PASSWORD:-""}
 
-# The database engine to use. Could be sqlite or mysql, postgres might be possible, but is not tested. 
-# If sqlite is used, no further configuration is necessary, otherwise you might need to set the variables 
+# The database engine to use. Could be sqlite or mysql, postgres might be possible, but is not tested.
+# If sqlite is used, no further configuration is necessary, otherwise you might need to set the variables
 # DRUPAL_TESTING_DATABASE_HOST, DRUPAL_TESTING_DATABASE_PORT, DRUPAL_TESTING_DATABASE_USER, DRUPAL_TESTING_DATABASE_PASSWORD
 #  and DRUPAL_TESTING_DATABASE_PASSWORD
 DRUPAL_TESTING_DATABASE_ENGINE=${DRUPAL_TESTING_DATABASE_ENGINE:-"sqlite"}

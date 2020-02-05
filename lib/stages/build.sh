@@ -5,7 +5,7 @@ _stage_build() {
     printf "Building the project.\n\n"
 
     local docroot=$(get_distribution_docroot)
-    local libraries=${docroot}/libraries;
+    local libraries=${docroot}/libraries
 
     # Install all dependencies
     cd ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}
@@ -30,8 +30,8 @@ _stage_build() {
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
     if [[ "${major_version}" -gt 8 ]] || [[ "${minor_version}" -gt 7 ]]; then
-        echo "\$settings['config_sync_directory'] = '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}';" >> ${sites_directory}/settings.php
+        echo "\$settings['config_sync_directory'] = '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}';" >>${sites_directory}/settings.php
     else
-        echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}' ];" >> ${sites_directory}/settings.php
+        echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}' ];" >>${sites_directory}/settings.php
     fi
 }
