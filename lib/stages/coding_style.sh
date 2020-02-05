@@ -25,14 +25,14 @@ __test_php_coding_styles() {
 __test_javascript_coding_styles() {
     if ! [[ -f .eslintrc ]]; then
         printf "${YELLOW}No .eslintrc file found. Skipping javascript coding style test.${TRANSPARENT}\n\n"
-        return;
+        return
     fi
 
     printf "Checking javascript coding styles\n\n"
 
     if ! [[ -x "$(command -v npm)" ]]; then
         printf "npm not found, please install npm to test javascript coding styles\n"
-        return;
+        return
     fi
 
     if ! [[ -x "$(command -v eslint)" ]]; then
@@ -40,7 +40,7 @@ __test_javascript_coding_styles() {
     fi
 
     # Install ESLint requirements
-    if [[ `npm list -g | grep -c eslint-config-drupal-bundle` -eq 0 ]]; then
+    if [[ $(npm list -g | grep -c eslint-config-drupal-bundle) -eq 0 ]]; then
         npm install -g eslint-config-drupal-bundle
     fi
 

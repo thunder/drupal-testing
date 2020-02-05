@@ -8,7 +8,7 @@ set -o nounset
 
 # Output help to console.
 show_help() {
-    cat << EOF
+    cat <<EOF
 Usage:   ${0##*/} [-h|--help] [-nc|--no-cleanup] [STAGE]
 Run tests for a drupal project (module, ditribution or full project). This has to be called from the projects folder.
 It builds a drupal installation and runs all tests that are defined in the projects directory.
@@ -39,41 +39,42 @@ get_script_dir() {
     local source="${BASH_SOURCE[0]}"
 
     # resolve $source until the file is no longer a symlink
-    while [[ -h "${source}" ]]; do
-        dir="$( cd -P "$( dirname "${source}" )" && pwd )"
+    while [[ -L ${source} ]]; do
+        dir="$(cd -P "$(dirname "${source}")" && pwd)"
         source="$(readlink "$source")"
 
         # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
         [[ ${source} != /* ]] && source="${dir}/${source}"
     done
-    echo "$( cd -P "$( dirname "${source}" )" && pwd )"
+    echo "$(cd -P "$(dirname "${source}")" && pwd)"
 }
 ### Parse command arguments ###
 
 for i in "${@}"; do
     case ${i} in
-        -h | -\? | --help)
-            show_help
-            exit
+    -h | -\? | --help)
+        show_help
+        exit
         ;;
-        -co | --clean-only)
-            clean_only=true
+    -co | --clean-only)
+        clean_only=true
         ;;
-        -nc | --no-cleanup)
-            DRUPAL_TESTING_CLEANUP=false
+    -nc | --no-cleanup)
+        DRUPAL_TESTING_CLEANUP=false
         ;;
-        -v)
-            DRUPAL_TESTING_VERBOSE=true
-            set -o xtrace
+    -v)
+        DRUPAL_TESTING_VERBOSE=true
+        set -o xtrace
         ;;
-        -?*)
-            printf "Unknown option: ${i}\n"
-            show_help
-            exit 1
+    -?*)
+        printf "Unknown option: ${i}\n"
+        show_help
+        exit 1
         ;;
-        *)
+    *)
         # last option has to be the test stage
-            DRUPAL_TESTING_TEST_STAGE=${i}
+        DRUPAL_TESTING_TEST_STAGE=${i}
+        ;;
     esac
 done
 
@@ -87,7 +88,7 @@ SCRIPT_DIR=$(get_script_dir)
 source ${SCRIPT_DIR}/../configuration.sh
 
 for library in ${SCRIPT_DIR}/../lib/*.sh; do
-   source ${library}
+    source ${library}
 done
 
 if ${clean_only:-false}; then
@@ -119,5 +120,3 @@ if ${DRUPAL_TESTING_CLEANUP}; then
 else
     reset_stage "run_tests"
 fi
-
-
