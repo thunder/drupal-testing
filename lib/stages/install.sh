@@ -15,7 +15,7 @@ _stage_install() {
     if ${DRUPAL_TESTING_INSTALL_FROM_CONFIG} = true; then
         ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes --existing-config site-install
     else
-        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes site-install ${DRUPAL_TESTING_TEST_PROFILE} ${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}
+        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes site-install "${DRUPAL_TESTING_TEST_PROFILE}" "${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}"
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
