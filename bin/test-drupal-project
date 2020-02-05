@@ -46,7 +46,7 @@ get_script_dir() {
         # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
         [[ ${source} != /* ]] && source="${dir}/${source}"
     done
-    echo "$(cd -P "$(dirname "${source}")" && pwd)"
+    cd -P "$(dirname "${source}")" && pwd
 }
 ### Parse command arguments ###
 
@@ -63,11 +63,11 @@ for i in "${@}"; do
         DRUPAL_TESTING_CLEANUP=false
         ;;
     -v)
-        DRUPAL_TESTING_VERBOSE=true
+        export DRUPAL_TESTING_VERBOSE=true
         set -o xtrace
         ;;
     -?*)
-        printf "Unknown option: ${i}\n"
+        printf "Unknown option: %s\n" "${i}"
         show_help
         exit 1
         ;;
@@ -84,11 +84,12 @@ DRUPAL_TESTING_TEST_STAGE=${DRUPAL_TESTING_TEST_STAGE:-run_tests}
 SCRIPT_DIR=$(get_script_dir)
 
 ### Source required files ###
+# shellcheck source=/dev/null
+source "${SCRIPT_DIR}/../configuration.sh"
 
-source ${SCRIPT_DIR}/../configuration.sh
-
-for library in ${SCRIPT_DIR}/../lib/*.sh; do
-    source ${library}
+for library in "${SCRIPT_DIR}"/../lib/*.sh; do
+    # shellcheck source=/dev/null
+    source "${library}"
 done
 
 if ${clean_only:-false}; then
@@ -98,17 +99,15 @@ fi
 
 ### Run stage ###
 
-cd ${DRUPAL_TESTING_PROJECT_BASEDIR}
+cd "${DRUPAL_TESTING_PROJECT_BASEDIR}" || exit
 
-if ! stage_exists ${DRUPAL_TESTING_TEST_STAGE}; then
-    printf "Unknown stage '${1}'\n\n"
+if ! stage_exists "${DRUPAL_TESTING_TEST_STAGE}"; then
+    printf "Unknown stage '%s'\n\n" "${1}"
     show_help
     exit 1
 fi
 
-dependency=$(stage_dependency ${DRUPAL_TESTING_TEST_STAGE})
-
-run_stage ${DRUPAL_TESTING_TEST_STAGE}
+run_stage "${DRUPAL_TESTING_TEST_STAGE}"
 
 if ! stage_is_finished "run_tests"; then
     exit
