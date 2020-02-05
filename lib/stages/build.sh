@@ -26,20 +26,6 @@ _stage_build() {
     # Back to previous directory.
     cd -
 
-    # Move downloaded frontend libraries to the correct folder within the web root. This is necessary, because the
-    # drupal project composer.json does not provide the necessary configuration to do so.
-    if [[ ! -d ${libraries} ]]; then
-        mkdir ${libraries}
-    fi
-
-    if [[ -d ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset ]]; then
-        mv ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/bower-asset/* ${libraries}
-    fi
-
-    if [[ -d ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset ]]; then
-        mv ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/vendor/npm-asset/* ${libraries}
-    fi
-
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
