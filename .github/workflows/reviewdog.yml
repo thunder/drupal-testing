@@ -21,4 +21,4 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: shellcheck
-        uses: bltavares/actions/shellcheck@master
+        uses: zbeekman/ShellCheck-Linter-Action@v1.0.1
