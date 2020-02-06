@@ -3,28 +3,31 @@
 run_stage() {
     local stage="${1}"
 
-    if stage_is_finished ${stage}; then
+    if stage_is_finished "${stage}"; then
         return
     fi
 
-    local dependency=$(stage_dependency ${stage})
+    local dependency
+    dependency=$(stage_dependency "${stage}")
 
     if [[ -n ${dependency} ]]; then
-        run_stage ${dependency}
+        run_stage "${dependency}"
     fi
 
     # source the stage
-    source ${SCRIPT_DIR}/../lib/stages/${stage}.sh
-    _stage_${stage}
+    # shellcheck source=/dev/null
+    source "${SCRIPT_DIR}/../lib/stages/${stage}.sh"
+    _stage_"${stage}"
 
-    finish_stage ${stage}
+    finish_stage "${stage}"
 }
 
 stage_exists() {
     local stage="${1}"
 
-    source ${SCRIPT_DIR}/../lib/stages/${stage}.sh
-    declare -f -F _stage_${stage} >/dev/null
+    # shellcheck source=/dev/null
+    source "${SCRIPT_DIR}/../lib/stages/${stage}.sh"
+    declare -f -F _stage_"${stage}" >/dev/null
 
     return ${?}
 }
@@ -67,10 +70,10 @@ finish_stage() {
     local stage="${1}"
 
     if [[ ! -d ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY} ]]; then
-        mkdir -p ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}
+        mkdir -p "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}"
     fi
 
-    touch ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${stage}
+    touch "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/${stage}"
 }
 
 reset_stage() {

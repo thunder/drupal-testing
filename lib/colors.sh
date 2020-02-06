@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-GREEN='\033[0;32m'
-TRANSPARENT='\033[0m'
+export RED='\033[0;31m'
+export YELLOW='\033[1;33m'
+export GREEN='\033[0;32m'
+export TRANSPARENT='\033[0m'

@@ -4,22 +4,23 @@ _stage_install() {
 
     printf "Installing project\n\n"
 
-    local docroot=$(get_distribution_docroot)
-    local composer_bin_dir=$(get_composer_bin_directory)
-    local drush="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
-    local drush_install_options="--verbose --db-url=${SIMPLETEST_DB} --yes"
+    local docroot
+    local composer_bin_dir
+    local drush
 
-    PHP_OPTIONS="-d sendmail_path=$(which true)"
+    docroot=$(get_distribution_docroot)
+    composer_bin_dir=$(get_composer_bin_directory)
+    drush="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
     if ${DRUPAL_TESTING_INSTALL_FROM_CONFIG} = true; then
-        ${drush} ${drush_install_options} --existing-config site-install
+        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes --existing-config site-install
     else
-        ${drush} ${drush_install_options} site-install ${DRUPAL_TESTING_TEST_PROFILE} ${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}
+        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes site-install "${DRUPAL_TESTING_TEST_PROFILE}" "${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}"
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
         cd "${docroot}" || exit
-        php core/scripts/db-tools.php dump-database-d8-mysql >${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}
+        php core/scripts/db-tools.php dump-database-d8-mysql >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
         cd - || exit
     fi
 }

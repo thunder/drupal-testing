@@ -22,4 +22,3 @@ jobs:
 
       - name: shellcheck
         uses: zbeekman/ShellCheck-Linter-Action@v1.0.1
-        continue-on-error: true
