@@ -1,0 +1,9 @@
+{
+  "name": "thunder/module",
+  "description": "Drupal module with all sorts of tests, to test capabilities of the drupal-testing package.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=7.2.0"
+  }
+}
