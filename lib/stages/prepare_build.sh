@@ -15,8 +15,11 @@ _stage_prepare_build() {
     # Build is based on drupal project
     if [[ ${DRUPAL_TESTING_COMPOSER_PROJECT} == "drupal/recommended-project" ]]; then
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}:${DRUPAL_TESTING_DRUPAL_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
-        installed_version=$(composer show 'drupal/core-recommended' | grep 'versions' | grep -o -E '[^ ]+$')
-        composer require drupal/core-dev:"${installed_version}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
+            composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        else 
+            composer require drupal/core-dev --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        fi
     else
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
         # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
