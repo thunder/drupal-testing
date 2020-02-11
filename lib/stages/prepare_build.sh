@@ -18,13 +18,12 @@ _stage_prepare_build() {
         composer require drupal/core-dev --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     else
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
-    fi
-    
-    # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
-    if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
-        composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
+        if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
+            composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+            composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+            composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        fi
     fi
 
     # Add asset-packagist for projects, that require frontend assets
