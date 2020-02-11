@@ -17,7 +17,7 @@ _stage_prepare_build() {
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}:${DRUPAL_TESTING_DRUPAL_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
         if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
             composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        else 
+        else
             composer require drupal/core-dev --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         fi
     else
