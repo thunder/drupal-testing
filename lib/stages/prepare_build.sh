@@ -15,7 +15,7 @@ _stage_prepare_build() {
     # Build is based on drupal project
     if [[ ${DRUPAL_TESTING_COMPOSER_PROJECT} == "drupal/recommended-project" ]]; then
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}:${DRUPAL_TESTING_DRUPAL_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
-        installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
+        installed_version=$(composer show 'drupal/core-recommended' | grep 'versions' | grep -o -E '[^ ]+$')
         composer require drupal/core-dev:"${installed_version}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     else
         composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
