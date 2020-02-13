@@ -10,11 +10,17 @@ jobs:
 
     strategy:
       matrix:
-        DRUPAL_TESTING_COMPOSER_PROJECT: ['drupal/recommended-project', 'thunder/thunder-project']
-        DRUPAL_TESTING_DRUPAL_VERSION: ['~8.7.0', '*']
-        exclude:
-          - DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+        FOO: [1,2,3]
+        include:
+          - FOO: 1
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
+          - FOO: 2
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '*'
+          - FOO: 3
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
 
     steps:
       - uses: actions/checkout@v1
