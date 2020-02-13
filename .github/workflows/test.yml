@@ -34,9 +34,8 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "::add-path::$HOME/.composer/vendor/bin"
-
-      - name: Get build environment
-        run: composer global require thunder/drupal-testing
+          echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Run tests
         run: test-drupal-project
