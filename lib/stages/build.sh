@@ -10,6 +10,13 @@ _stage_build() {
 
     docroot=$(get_distribution_docroot)
 
+    # Install all dependencies
+    cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
+    composer update
+
+    # Back to previous directory.
+    cd - || exit
+
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
