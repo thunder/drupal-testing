@@ -8,6 +8,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        DRUPAL_TESTING_COMPOSER_PROJECT: ['drupal/recommended-project', 'thunder/thunder-project']
+
     steps:
       - uses: actions/checkout@v1
 
