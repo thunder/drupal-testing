@@ -10,15 +10,15 @@ jobs:
 
     strategy:
       matrix:
-        FOO: [1,2,3]
+        RUN: [1, 2, 3]
         include:
-          - FOO: 1
+          - RUN: 1
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
-          - FOO: 2
+          - RUN: 2
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '*'
-          - FOO: 3
+          - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
 
