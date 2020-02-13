@@ -14,6 +14,10 @@ _stage_build() {
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     composer update
 
+    installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
+    major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
+    minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
+
     # Back to previous directory.
     cd - || exit
 
