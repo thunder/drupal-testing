@@ -32,9 +32,6 @@ _stage_prepare_build() {
 
     composer require drush/drush --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
-    # Install without core-composer-scaffold until we know, what version of core is used.
-    composer remove drupal/core-composer-scaffold --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-
     # Require phpstan.
     if ${DRUPAL_TESTING_TEST_DEPRECATION}; then
         composer require mglaman/phpstan-drupal:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
