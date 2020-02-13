@@ -61,7 +61,7 @@ DRUPAL_TESTING_PHPCS_IGNORE_PATTERN=${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN:-*/ven
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported.
-DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-""}
+DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-"*"}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.

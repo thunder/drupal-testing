@@ -13,7 +13,16 @@ _stage_prepare_build() {
     printf "Prepare composer.json\n\n"
 
     # Build is based on drupal project
-    composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --stability dev --no-interaction --no-install
+    if [[ ${DRUPAL_TESTING_COMPOSER_PROJECT} == "drupal/recommended-project" ]]; then
+        composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" "${DRUPAL_TESTING_DRUPAL_VERSION}" --no-interaction --no-install
+    else
+        composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
+
+        composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    fi
+
+    composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Add asset-packagist for projects, that require frontend assets
     if ! composer_repository_exists "https://asset-packagist.org"; then
@@ -24,13 +33,6 @@ _stage_prepare_build() {
         mv "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.tmp" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
 
         composer require oomphinc/composer-installers-extender --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    fi
-
-    # Require the specific Drupal core version we need, as well as the corresponding dev-requirements
-    if [[ "${DRUPAL_TESTING_DRUPAL_VERSION}" ]]; then
-        composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
     composer require drush/drush --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
