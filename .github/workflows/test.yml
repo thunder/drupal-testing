@@ -1,0 +1,60 @@
+name: Run module tests
+
+on:
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        RUN: [1, 2, 3]
+        include:
+          - RUN: 1
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
+          - RUN: 2
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '*'
+          - RUN: 3
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: shivammathur/setup-php@master
+        with:
+          coverage: none
+          php-version: '7.3'
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-cache-
+
+      - name: Cache NPM dependencies
+        id: npm-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache
+          restore-keys: ${{ runner.os }}-npm-cache
+
+      - name: Setup environment variables
+        run: |
+          echo "::add-path::$HOME/.composer/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+
+      - name: Run tests
+        run: test-drupal-project
+        env:
+          DRUPAL_TESTING_TEST_CODING_STYLES: false
+          DRUPAL_TESTING_PROJECT_BASEDIR: ${{ github.workspace }}/tests/module
+          DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
+          DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}

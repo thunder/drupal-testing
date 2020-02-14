@@ -1,0 +1,4 @@
+services:
+  module.service:
+    class: Drupal\module\Service
+    arguments: []

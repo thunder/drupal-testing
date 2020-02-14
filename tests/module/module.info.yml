@@ -1,0 +1,6 @@
+name: Module
+type: module
+description: Drupal module with all sorts of tests, to test capabilities of the drupal-testing package.
+package: Drupal Testing
+core: 8.x
+core_version_requirement: ^8 || ^9

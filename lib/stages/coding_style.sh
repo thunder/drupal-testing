@@ -24,7 +24,7 @@ __test_php_coding_styles() {
 
 __test_javascript_coding_styles() {
     if ! [[ -f .eslintrc ]]; then
-        printf "%sNo .eslintrc file found. Skipping javascript coding style test.%s\n\n" "${YELLOW}" "${TRANSPARENT}"
+        printf "%bNo .eslintrc file found. Skipping javascript coding style test.%b\n\n" "${YELLOW}" "${TRANSPARENT}"
         return
     fi
 
