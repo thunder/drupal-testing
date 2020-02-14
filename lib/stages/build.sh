@@ -5,6 +5,7 @@ _stage_build() {
     printf "Building the project.\n\n"
 
     local docroot
+    local installed_version
     local major_version
     local minor_version
 
