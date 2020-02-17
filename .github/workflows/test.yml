@@ -33,6 +33,11 @@ jobs:
           coverage: none
           php-version: '7.3'
 
+    # Create-project with absolute path is broken in 1.10-RC;
+    # setup-php action does not support passing composer version.
+      - name: Downgrade composer
+        run: sudo rm /usr/local/bin/composer; composer self-update 1.9.3
+
       - name: Cache composer dependencies
         uses: actions/cache@v1
         with:
