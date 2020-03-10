@@ -13,7 +13,7 @@ _stage_build() {
     docroot=$(get_distribution_docroot)
 
     if ${DRUPAL_TESTING_MIN_BUILD}; then
-      composer_arguments="--prefer-lowest"
+        composer_arguments="--prefer-lowest"
     fi
 
     # Install all dependencies

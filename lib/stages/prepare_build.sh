@@ -50,7 +50,7 @@ _stage_prepare_build() {
     # require the project, we want to test.
     composer require "${DRUPAL_TESTING_COMPOSER_NAME}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
-    # Workaround untill composer 1.10 is released
+    # Workaround until composer 1.10 is released
     composer remove drupal/core-dev --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
