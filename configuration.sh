@@ -140,7 +140,7 @@ DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY=${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY:-"..
 DRUPAL_TESTING_INSTALLATION_FORM_VALUES=${DRUPAL_TESTING_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
 
 # Set this flag to true, to pass the --prefer-lowest parameter to composer. With this parameter, the minimal installable
-# version of dependencies are installed.
+# versions of dependencies are installed.
 DRUPAL_TESTING_MIN_BUILD=${DRUPAL_TESTING_MIN_BUILD:-false}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
