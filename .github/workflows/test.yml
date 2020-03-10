@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3]
+        RUN: [1, 2, 3, 4]
         include:
           - RUN: 1
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
@@ -21,6 +21,10 @@ jobs:
           - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+          - RUN: 4
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+            DRUPAL_TESTING_MIN_BUILD: true
 
     steps:
       - uses: actions/checkout@v1
