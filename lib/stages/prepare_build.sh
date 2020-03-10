@@ -17,7 +17,9 @@ _stage_prepare_build() {
 
     composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    # Workaround until composer 1.10 is released, and require-dev can be empty
+
+    # Workaround until composer 1.10 is released, and require-dev can be empty. When composer 1.10 gets released, this line, and the corresponding
+    # composer remove drupal/core-dev line below can be removed.
     composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Add asset-packagist for projects, that require frontend assets
