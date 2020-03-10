@@ -22,8 +22,8 @@ jobs:
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
           - RUN: 4
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '*'
             DRUPAL_TESTING_MIN_BUILD: true
 
     steps:
