@@ -41,14 +41,6 @@ jobs:
           key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-cache-
 
-      - name: Cache NPM dependencies
-        id: npm-cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-cache
-          restore-keys: ${{ runner.os }}-npm-cache
-
       - name: Setup environment variables
         run: |
           echo "::add-path::$HOME/.composer/vendor/bin"
