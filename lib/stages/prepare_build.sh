@@ -12,7 +12,8 @@ _stage_prepare_build() {
 
     printf "Prepare composer.json\n\n"
 
-    composer --version
+    # composer 1.10 is required
+    composer self-update
 
     # Build is based on drupal project
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
