@@ -19,6 +19,6 @@ _stage_start_web_server() {
         fi
 
         ${drush} ${runserver_flags} runserver "http://${DRUPAL_TESTING_HTTP_HOST}:${DRUPAL_TESTING_HTTP_PORT}" >/dev/null 2>&1 &
-        wait_for_port "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}"
+        wait_for_port "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}" 30
     fi
 }
