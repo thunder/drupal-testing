@@ -12,15 +12,13 @@ _stage_prepare_build() {
 
     printf "Prepare composer.json\n\n"
 
+    composer --version
+
     # Build is based on drupal project
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
 
     composer require drupal/core:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer require drupal/core-recommended:"${DRUPAL_TESTING_DRUPAL_VERSION}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-
-    # Workaround until composer 1.10 is released, and require-dev can be empty. When composer 1.10 gets released, this line, and the corresponding
-    # composer remove drupal/core-dev line below can be removed.
-    composer require drupal/core-dev:"${DRUPAL_TESTING_DRUPAL_VERSION}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Add asset-packagist for projects, that require frontend assets
     if ! composer_repository_exists "https://asset-packagist.org"; then
@@ -52,9 +50,6 @@ _stage_prepare_build() {
 
     # require the project, we want to test.
     composer require "${DRUPAL_TESTING_COMPOSER_NAME}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-
-    # Workaround until composer 1.10 is released
-    composer remove drupal/core-dev --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
     for dev_dependency in $(jq -r '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
