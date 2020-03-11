@@ -18,7 +18,6 @@ _stage_run_tests() {
     fi
 
     if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
-        mysql --host="${DRUPAL_TESTING_DATABASE_HOST}" --port="${DRUPAL_TESTING_DATABASE_PORT}" --user="${DRUPAL_TESTING_DATABASE_USER}" --password="${DRUPAL_TESTING_DATABASE_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${DRUPAL_TESTING_DATABASE_NAME};"
         export thunderDumpFile=${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}
     fi
 
