@@ -24,10 +24,6 @@ _stage_build() {
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
     minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
 
-    # Require core-dev based on installed core version
-    composer require drupal/core-dev:"${installed_version}" --no-update
-    composer update ${composer_arguments}
-
     # Back to previous directory.
     cd - || exit
 
