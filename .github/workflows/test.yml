@@ -111,3 +111,34 @@ jobs:
         with:
           name: build
           path: build.tgz
+
+  test-split-download:
+    needs: test-split-upload
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: shivammathur/setup-php@master
+        with:
+          coverage: none
+          php-version: '7.3'
+          extensions: Imagick
+
+      - name: Setup environment variables
+        run: |
+          echo "::add-path::$HOME/.composer/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+
+      - name: Download build
+        uses: actions/download-artifact@v1
+        with:
+          name: build
+
+      - name: Unzip build artifact
+        run: tar xCfz /tmp build/build.tgz test; rm -rf build
+
+      - name: Run the tests
+        run: test-drupal-project run_tests
