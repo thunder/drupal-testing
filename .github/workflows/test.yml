@@ -22,7 +22,7 @@ jobs:
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '*'
           - RUN: 3
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '*'
             DRUPAL_TESTING_MIN_BUILD: true
           - RUN: 4
