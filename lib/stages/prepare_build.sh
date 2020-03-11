@@ -33,8 +33,6 @@ _stage_prepare_build() {
         composer require oomphinc/composer-installers-extender --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
-    composer require drush/drush:"^9.0.1|^10.0" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-
     # Require phpstan.
     if ${DRUPAL_TESTING_TEST_DEPRECATION}; then
         composer require mglaman/phpstan-drupal:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
