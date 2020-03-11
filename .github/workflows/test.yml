@@ -107,7 +107,7 @@ jobs:
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
 
       - name: Zip build
-        run: cd ${env.DRUPAL_TESTING_TEST_BASE_DIRECTORY}; tar cfz build.tgz thunder; mv build.tgz ${GITHUB_WORKSPACE}
+        run: cd ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}; tar cfz build.tgz thunder; mv build.tgz ${GITHUB_WORKSPACE}
 
       - name: Upload build
         uses: actions/upload-artifact@v1
