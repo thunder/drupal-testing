@@ -142,3 +142,7 @@ jobs:
 
       - name: Run the tests
         run: test-drupal-project run_tests
+        env:
+          DRUPAL_TESTING_PROJECT_BASEDIR: ${{ github.workspace }}/tests/module
+          DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
+          DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
