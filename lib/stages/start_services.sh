@@ -23,7 +23,6 @@ _stage_start_services() {
     local docroot
     docroot=$(get_distribution_docroot)
 
-
     if ! port_is_open "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"; then
         printf "Starting web driver\n"
 
