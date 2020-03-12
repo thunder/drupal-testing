@@ -6,8 +6,12 @@ on:
   schedule:
     - cron:  '0 6 * * *'
 
+env:
+  DRUPAL_TESTING_TEST_CODING_STYLES: false
+  DRUPAL_TESTING_PROJECT_BASEDIR: ${{ github.workspace }}/tests/module
+
 jobs:
-  build:
+  test-projects:
 
     runs-on: ubuntu-latest
 
@@ -52,8 +56,81 @@ jobs:
       - name: Run tests
         run: test-drupal-project
         env:
-          DRUPAL_TESTING_TEST_CODING_STYLES: false
-          DRUPAL_TESTING_PROJECT_BASEDIR: ${{ github.workspace }}/tests/module
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
           DRUPAL_TESTING_MIN_BUILD: ${{ matrix.DRUPAL_TESTING_MIN_BUILD }}
+
+  test-split-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: shivammathur/setup-php@master
+        with:
+          coverage: none
+          php-version: '7.3'
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-cache-
+
+      - name: Cache NPM dependencies
+        id: npm-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-cache
+          restore-keys: ${{ runner.os }}-npm-cache
+
+      - name: Setup environment variables
+        run: |
+          echo "::add-path::$HOME/.composer/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+
+      - name: Install project
+        run: test-drupal-project install          
+
+      - name: Zip build
+        run: cd /tmp; tar cfz build.tgz test; mv build.tgz ${GITHUB_WORKSPACE}
+
+      - name: Upload build
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build.tgz
+
+  test-split-download:
+    needs: test-split-upload
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: shivammathur/setup-php@master
+        with:
+          coverage: none
+          php-version: '7.3'
+          extensions: Imagick
+
+      - name: Setup environment variables
+        run: |
+          echo "::add-path::$HOME/.composer/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+
+      - name: Download build
+        uses: actions/download-artifact@v1
+        with:
+          name: build
+
+      - name: Unzip build artifact
+        run: tar xCfz /tmp build/build.tgz test; rm -rf build
+
+      - name: Run the tests
+        run: test-drupal-project run_tests

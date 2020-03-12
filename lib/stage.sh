@@ -37,9 +37,9 @@ stage_dependency() {
 
     case ${1} in
     run_tests)
-        dep="start_web_server"
+        dep="start_services"
         ;;
-    start_web_server)
+    start_services)
         dep="install"
         ;;
     install)
@@ -52,9 +52,9 @@ stage_dependency() {
         dep="prepare_build"
         ;;
     prepare_build)
-        dep="setup"
+        dep="requirements"
         ;;
-    setup)
+    requirements)
         dep="coding_style"
         ;;
     esac

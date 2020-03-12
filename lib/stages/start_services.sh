@@ -17,14 +17,11 @@ download_chromedriver() {
     rm "${DRUPAL_TESTING_TEST_BASE_DIRECTORY}"/"${filename}"
 }
 
-# Setup the environment, and start services
-_stage_setup() {
-    printf "Setup environment\n\n"
+_stage_start_services() {
+    printf "Starting services\n\n"
 
-    if [[ ${DRUPAL_TESTING_DATABASE_ENGINE} != 'sqlite' ]] && ! port_is_open "${DRUPAL_TESTING_DATABASE_HOST}" "${DRUPAL_TESTING_DATABASE_PORT}"; then
-        printf "Error: Database is not running, or configured incorrectly.\n"
-        exit 1
-    fi
+    local docroot
+    docroot=$(get_distribution_docroot)
 
     if ! port_is_open "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"; then
         printf "Starting web driver\n"
@@ -37,5 +34,10 @@ _stage_setup() {
         fi
 
         wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
+    fi
+
+    if ! port_is_open "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}"; then
+        php -S "${DRUPAL_TESTING_HTTP_HOST}":"${DRUPAL_TESTING_HTTP_PORT}" -t "${docroot}" >/dev/null 2>&1 &
+        wait_for_port "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}" 30
     fi
 }
