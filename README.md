@@ -84,7 +84,7 @@ The simplest way to run the tests is to just call <code>test_drupal_project</cod
 This will do everything, but it is actually divided into several steps which can be called separately by providing the
 step as a parameter: <code>test_drupal_project build</code> would call the build step and any steps that the build step
 depends on. Steps, that have already been executed will not be called again on subsequent call. So, if you call
-<code>test_drupal_project start_web_server</code> next, all steps up to the build step will not be executed.
+<code>test_drupal_project start_services</code> next, all steps up to the build step will not be executed.
 
 The steps are the following:
 
@@ -103,8 +103,8 @@ Builds the drupal installation with drupal project, adds all dependencies from t
 ### install
 Installs drupal with the minimal profile or the one that has been configured.
 
-### start_web_server
-Starts a webserver pointing to the installed drupal.
+### start_services
+Starts a services required for testing. Starts web server and selenium.
 
 ### run_tests
 Runs the tests

@@ -37,9 +37,9 @@ stage_dependency() {
 
     case ${1} in
     run_tests)
-        dep="start_web_server"
+        dep="start_services"
         ;;
-    start_web_server)
+    start_services)
         dep="install"
         ;;
     install)
