@@ -60,8 +60,8 @@ DRUPAL_TESTING_TEST_DEPRECATION=${DRUPAL_TESTING_TEST_DEPRECATION:-test -f phpst
 DRUPAL_TESTING_PHPCS_IGNORE_PATTERN=${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN:-*/vendor/*,*/core/*,*/autoload.php,*.md}
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
-# are supported.
-DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-"*"}
+# are supported. By default, we use the most recent stable version.
+DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]\.[0-9]+$' | head -n1)}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.
