@@ -52,9 +52,9 @@ stage_dependency() {
         dep="prepare_build"
         ;;
     prepare_build)
-        dep="setup"
+        dep="requirements"
         ;;
-    setup)
+    requirements)
         dep="coding_style"
         ;;
     esac

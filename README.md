@@ -88,8 +88,8 @@ depends on. Steps, that have already been executed will not be called again on s
 
 The steps are the following:
 
-### setup
-Setup the testing environment. Starts selenium and mysql if necessary and tweaks php on travis 
+### requirements
+Check if testing requirements are met. 
 
 ### coding_style
 Tests php and javascript coding styles
