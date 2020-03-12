@@ -104,7 +104,7 @@ Builds the drupal installation with drupal project, adds all dependencies from t
 Installs drupal with the minimal profile or the one that has been configured.
 
 ### start_services
-Starts a services required for testing. Starts web server and selenium.
+Starts services required for testing. Starts web server and selenium.
 
 ### run_tests
 Runs the tests
