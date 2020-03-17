@@ -8,7 +8,11 @@ CI=${CI:-${GITHUB_ACTIONS:-false}}
 # Generate more verbose output, defaults to false. Can also be set to true by providing the -v parameter to the invoking command.
 DRUPAL_TESTING_VERBOSE=${DRUPAL_TESTING_VERBOSE:-false}
 
+# The composer project to use. defaults to the drupal/recommended-project. But e.g. Distribution specific projects can be used instead.
 DRUPAL_TESTING_COMPOSER_PROJECT=${DRUPAL_TESTING_COMPOSER_PROJECT:-"drupal/recommended-project"}
+
+# The version of the composer project to use.
+DRUPAL_TESTING_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION:-"*"}
 
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TESTING_PROJECT_BASEDIR=${DRUPAL_TESTING_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
@@ -134,6 +138,10 @@ DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY=${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY:-"..
 
 # Additional form values for the installation profile. This is uses by drush site-install.
 DRUPAL_TESTING_INSTALLATION_FORM_VALUES=${DRUPAL_TESTING_INSTALLATION_FORM_VALUES:-"install_configure_form.enable_update_status_module=NULL"}
+
+# Set this flag to true, to pass the --prefer-lowest parameter to composer. With this parameter, the minimal installable
+# versions of dependencies are installed.
+DRUPAL_TESTING_MIN_BUILD=${DRUPAL_TESTING_MIN_BUILD:-false}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.

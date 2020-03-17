@@ -17,15 +17,18 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3]
+        RUN: [1, 2, 3, 4]
         include:
           - RUN: 1
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
           - RUN: 2
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '*'
           - RUN: 3
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+            DRUPAL_TESTING_MIN_BUILD: true
+          - RUN: 4
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
 
@@ -44,14 +47,6 @@ jobs:
           key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-cache-
 
-      - name: Cache NPM dependencies
-        id: npm-cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-cache
-          restore-keys: ${{ runner.os }}-npm-cache
-
       - name: Setup environment variables
         run: |
           echo "::add-path::$HOME/.composer/vendor/bin"
@@ -63,6 +58,7 @@ jobs:
         env:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
+          DRUPAL_TESTING_MIN_BUILD: ${{ matrix.DRUPAL_TESTING_MIN_BUILD }}
 
   test-split-upload:
     runs-on: ubuntu-latest

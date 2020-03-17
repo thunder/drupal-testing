@@ -5,15 +5,20 @@ _stage_build() {
     printf "Building the project.\n\n"
 
     local docroot
+    local composer_arguments=""
     local installed_version
     local major_version
     local minor_version
 
     docroot=$(get_distribution_docroot)
 
+    if ${DRUPAL_TESTING_MIN_BUILD}; then
+        composer_arguments="--prefer-lowest"
+    fi
+
     # Install all dependencies
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
-    composer update
+    composer update ${composer_arguments}
 
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
