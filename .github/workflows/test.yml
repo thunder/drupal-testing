@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4]
+        RUN: [1, 2, 3, 4, 5]
         include:
           - RUN: 1
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
@@ -31,7 +31,7 @@ jobs:
           - RUN: 4
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
-          - RUN: 4
+          - RUN: 5
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '9.0.x-dev'
 
@@ -42,11 +42,6 @@ jobs:
         with:
           coverage: none
           php-version: '7.3'
-
-    # Create-project with absolute path is broken in 1.10-RC;
-    # setup-php action does not support passing composer version.
-      - name: Downgrade composer
-        run: sudo rm /usr/local/bin/composer; composer self-update 1.9.3
 
       - name: Cache composer dependencies
         uses: actions/cache@v1
