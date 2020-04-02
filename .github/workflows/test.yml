@@ -134,6 +134,7 @@ jobs:
 
       - name: Unzip build artifact
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
-
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v1
       - name: Run the tests
         run: test-drupal-project run_tests
