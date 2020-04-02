@@ -96,7 +96,7 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Install project
-        run: test-drupal-project install          
+        run: test-drupal-project install
 
       - name: Zip build
         run: cd /tmp; tar cfz build.tgz test; mv build.tgz ${GITHUB_WORKSPACE}
@@ -136,4 +136,4 @@ jobs:
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
 
       - name: Run the tests
-        run: test-drupal-project run_tests
+        run: test-drupal-project -v run_tests
