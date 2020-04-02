@@ -17,8 +17,20 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [5]
+        RUN: [1, 2, 3, 4, 5]
         include:
+          - RUN: 1
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
+          - RUN: 2
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+          - RUN: 3
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
+            DRUPAL_TESTING_MIN_BUILD: true
+          - RUN: 4
+            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
           - RUN: 5
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '9.0.x-dev'
@@ -30,6 +42,7 @@ jobs:
         with:
           coverage: none
           php-version: '7.3'
+          extension: Sqlite3
 
       - name: Cache composer dependencies
         uses: actions/cache@v1
@@ -43,8 +56,7 @@ jobs:
           echo "::add-path::$HOME/.composer/vendor/bin"
           echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
           echo "::add-path::$GITHUB_WORKSPACE/bin"
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
+
       - name: Run tests
         run: test-drupal-project
         env:
@@ -123,5 +135,6 @@ jobs:
 
       - name: Unzip build artifact
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
+
       - name: Run the tests
         run: test-drupal-project run_tests
