@@ -136,4 +136,4 @@ jobs:
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
 
       - name: Run the tests
-        run: test-drupal-project -v run_tests
+        run: test-drupal-project run_tests
