@@ -17,20 +17,8 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4, 5]
+        RUN: [5]
         include:
-          - RUN: 1
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.7.0'
-          - RUN: 2
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-          - RUN: 3
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
-            DRUPAL_TESTING_MIN_BUILD: true
-          - RUN: 4
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
           - RUN: 5
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '9.0.x-dev'
