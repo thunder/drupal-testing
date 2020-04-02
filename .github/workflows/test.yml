@@ -55,7 +55,8 @@ jobs:
           echo "::add-path::$HOME/.composer/vendor/bin"
           echo "::add-path::$GITHUB_WORKSPACE/vendor/bin"
           echo "::add-path::$GITHUB_WORKSPACE/bin"
-
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v1
       - name: Run tests
         run: test-drupal-project
         env:
@@ -134,7 +135,5 @@ jobs:
 
       - name: Unzip build artifact
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
       - name: Run the tests
         run: test-drupal-project run_tests
