@@ -34,7 +34,6 @@ jobs:
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
           - RUN: 5
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.0'
-            DRUPAL_TESTING_DRUPAL_VERSION: '9.0.x-dev'
 
     steps:
       - uses: actions/checkout@v1
