@@ -81,6 +81,10 @@ jobs:
           coverage: none
           php-version: '7.3'
 
+      - name: Start MySql service
+        run: |
+          sudo /etc/init.d/mysql start
+
       - name: Cache composer dependencies
         uses: actions/cache@v1
         with:
@@ -127,6 +131,10 @@ jobs:
           coverage: none
           php-version: '7.3'
           extensions: Imagick
+
+      - name: Start MySql service
+        run: |
+          sudo /etc/init.d/mysql start
 
       - name: Setup environment variables
         run: |
