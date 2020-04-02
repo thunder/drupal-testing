@@ -31,9 +31,6 @@ jobs:
           - RUN: 4
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
-          - RUN: 5
-            DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '9.0.x-dev'
 
     steps:
       - uses: actions/checkout@v1
