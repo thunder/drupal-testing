@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 
 _stage_prepare_build() {
+    local branch
+    local commit
     local docroot
     docroot=$(get_distribution_docroot false)
 
+    if [[ -d .git ]]; then
+      branch=$(git rev-parse --abbrev-ref HEAD)
+      commit=
+    fi
+
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} == "project" ]]; then
-        rsync --archive --exclude=".git" "${DRUPAL_TESTING_PROJECT_BASEDIR}"/ "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        return
+      rsync --archive --exclude=".git" "${DRUPAL_TESTING_PROJECT_BASEDIR}"/ "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+      return
     fi
 
     printf "Prepare composer.json\n\n"
