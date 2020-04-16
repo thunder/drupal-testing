@@ -38,6 +38,9 @@ DRUPAL_TESTING_COMPOSER_NAME=${DRUPAL_TESTING_COMPOSER_NAME:-$(jq -r .name "${DR
 # vendor/myproject the project name will be myproject.
 DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo "${DRUPAL_TESTING_COMPOSER_NAME}" | cut -d '/' -f 2)" '.extra."installer-name" // $FALLBACK' "${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json")}
 
+# The version of the project to test. If none is given, the build script will use the currently checked out commit.
+DRUPAL_TESTING_PROJECT_VERSION=${DRUPAL_TESTING_PROJECT_VERSION:-""}
+
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
 DRUPAL_TESTING_TEST_GROUP=${DRUPAL_TESTING_TEST_GROUP:-""}

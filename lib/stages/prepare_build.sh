@@ -3,13 +3,12 @@
 _stage_prepare_build() {
     local branch
     local commit
+    local version
     local docroot
     docroot=$(get_distribution_docroot false)
 
-    if [[ -d .git ]]; then
-      branch=$(git rev-parse --abbrev-ref HEAD)
-      commit=
-    fi
+    branch=$(git rev-parse --abbrev-ref HEAD)
+    commit=$(git rev-parse HEAD)
 
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} == "project" ]]; then
@@ -56,8 +55,15 @@ _stage_prepare_build() {
     composer require cweagans/composer-patches --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config extra.enable-patching true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
+    # When we are on a git checkout, use the specific commit. Otherwise use "*" in the require statement below.
+    if [[ -d .git ]]; then
+      version=${DRUPAL_TESTING_TEST_VERSION:-"dev-""${branch}""#""${commit}"}
+    else
+      version="*"
+    fi
+
     # require the project, we want to test.
-    composer require "${DRUPAL_TESTING_COMPOSER_NAME}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require "${DRUPAL_TESTING_COMPOSER_NAME}:${version}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
     for dev_dependency in $(jq -r '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
