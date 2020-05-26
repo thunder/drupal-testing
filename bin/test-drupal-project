@@ -25,6 +25,7 @@ Options:
     -h,  --help              Display this help.
     -nc, --no-cleanup        Do not cleanup after successful tests. Set this option to keep the installation.
     -co, --clean-only        Just run cleanup and exit.
+    -v, --verbose            Verbose output
 
 Example:
     test-drupal-module               Run everything.
@@ -62,7 +63,7 @@ for i in "${@}"; do
     -nc | --no-cleanup)
         DRUPAL_TESTING_CLEANUP=false
         ;;
-    -v)
+    -v | --verbose)
         export DRUPAL_TESTING_VERBOSE=true
         set -o xtrace
         ;;
