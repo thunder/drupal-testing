@@ -61,7 +61,9 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Run tests
-        run: test-drupal-project --verbose
+        run: |
+          composer install
+          test-drupal-project --verbose
         env:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
@@ -104,7 +106,9 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Install project
-        run: test-drupal-project install
+        run: |
+          composer install
+          test-drupal-project install
 
       - name: Zip build
         run: cd /tmp; tar cfz build.tgz test; mv build.tgz ${GITHUB_WORKSPACE}
