@@ -19,9 +19,10 @@ branches:
     - master
 
 env:
-  - DRUPAL_TESTING_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/tests/module
-  - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
-  - DRUPAL_TESTING_PHPCS_IGNORE_PATTERN="*.md"
+  global:
+    - DRUPAL_TESTING_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/tests/module
+    - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
+    - DRUPAL_TESTING_PHPCS_IGNORE_PATTERN="*.md"
 
 install:
   - composer install
