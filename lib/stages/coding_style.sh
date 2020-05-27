@@ -21,7 +21,6 @@ __test_php_coding_styles() {
     composer config -g --absolute home
     composer config -g --absolute vendor-dir
     phpcs --config-set installed_paths "$(composer config -g --absolute vendor-dir)"/drupal/coder/coder_sniffer
-
     phpcs -ps --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --ignore="${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN}" .
     phpcs -ps --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --ignore="${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN}" .
 }

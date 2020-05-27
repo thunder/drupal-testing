@@ -61,7 +61,7 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Run tests
-        run: test-drupal-project
+        run: test-drupal-project --verbose
         env:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
