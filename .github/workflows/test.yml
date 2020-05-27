@@ -63,7 +63,7 @@ jobs:
       - name: Run tests
         run: |
           composer install
-          test-drupal-project --verbose
+          test-drupal-project
         env:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
