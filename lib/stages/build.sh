@@ -32,7 +32,7 @@ _stage_build() {
 
     if [[ ${major_version} -gt 8 ]]; then
         # Apply core patch
-        cd "${DRUPAL_TESTING_PROJECT_BASEDIR}" || exit
+        cd "${docroot}" || exit
         wget https://www.drupal.org/files/issues/2020-06-08/3143604-8_0.patch
         patch -p1 < 3143604-8_0.patch
         cd - || exit
