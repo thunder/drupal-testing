@@ -30,6 +30,12 @@ _stage_build() {
     # Back to previous directory.
     cd - || exit
 
+    # Apply core patch
+    cd "${DRUPAL_TESTING_PROJECT_BASEDIR}" || exit
+    wget https://www.drupal.org/files/issues/2020-06-08/3143604-8_0.patch
+    patch -p1 < 3143604-8_0.patch
+    cd - || exit
+
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
     cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
