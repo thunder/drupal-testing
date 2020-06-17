@@ -15,6 +15,12 @@ _stage_build() {
         composer_arguments="--prefer-lowest"
     fi
 
+    # require the project, we want to test. To make sure, that the local version is used, we rename the project first
+    local testing_project_name=drupal-testing-"${DRUPAL_TESTING_COMPOSER_NAME}"
+    composer config name "${testing_project_name}" --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}"
+    composer remove "${DRUPAL_TESTING_COMPOSER_NAME}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require "${testing_project_name}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+
     # Install all dependencies
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     composer update ${composer_arguments}
