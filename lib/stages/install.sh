@@ -15,9 +15,11 @@ _stage_install() {
     composer_bin_dir=$(get_composer_bin_directory)
     drush="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
 
+    cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
     minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
+    cd - || exit
 
     # Copy default settings and append config sync directory.
     local sites_directory="${docroot}/sites/default"
