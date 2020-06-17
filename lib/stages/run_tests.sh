@@ -17,7 +17,11 @@ _stage_run_tests() {
         test_selection="${test_selection} --group ${DRUPAL_TESTING_TEST_GROUP}"
     fi
 
-    if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
+    if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
+        cd "${docroot}" || exit
+        php core/scripts/db-tools.php dump-database-d8-mysql >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
+        cd - || exit
+
         # Database needs to be initialized, if the run was split into a build and a test run.
         mysql --host="${DRUPAL_TESTING_DATABASE_HOST}" --port="${DRUPAL_TESTING_DATABASE_PORT}" --user="${DRUPAL_TESTING_DATABASE_USER}" --password="${DRUPAL_TESTING_DATABASE_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${DRUPAL_TESTING_DATABASE_NAME};"
         export thunderDumpFile=${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}
