@@ -5,19 +5,19 @@ _stage_build() {
     printf "Building the project.\n\n"
 
     local docroot
+    local composer_arguments=""
     local installed_version
     local major_version
     
     docroot=$(get_distribution_docroot)
 
+    if ${DRUPAL_TESTING_MIN_BUILD}; then
+        composer_arguments="--prefer-lowest"
+    fi
+
     # Install all dependencies
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
-
-    if ${DRUPAL_TESTING_MIN_BUILD}; then
-        composer update --prefer-lowest
-    else 
-        composer install
-    fi
+    composer update ${composer_arguments}
 
     # We can cleanup the name change now.
     composer config name "${DRUPAL_TESTING_COMPOSER_NAME}" --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}"
