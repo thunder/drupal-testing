@@ -5,7 +5,7 @@ get_distribution_docroot() {
     local absolute=${1:-true}
     local docroot="web"
 
-    if [[ ${DRUPAL_TESTING_COMPOSER_PROJECT} =~ ^thunder/thunder-project.* ]]; then
+    if [[ ${DRUPAL_TESTING_COMPOSER_PROJECT} =~ ^(thunder|BurdaMagazinOrg)/thunder-project.* ]]; then
         docroot="docroot"
     fi
 
