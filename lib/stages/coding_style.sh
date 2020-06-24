@@ -18,6 +18,7 @@ _stage_coding_style() {
 __test_php_coding_styles() {
     printf "Checking php coding styles\n\n"
 
+    phpcs --config-set installed_paths ../../drupal/coder/coder_sniffer
     phpcs -ps --standard=Drupal --extensions=php,module,inc,install,test,profile,theme --ignore="${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN}" .
     phpcs -ps --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme --ignore="${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN}" .
 }

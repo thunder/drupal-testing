@@ -19,26 +19,16 @@ branches:
     - master
 
 env:
-  matrix:
-    - DRUPAL_TESTING_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/paragraphs_features
-    - DRUPAL_TESTING_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/vendor/drupal/scheduler_content_moderation_integration DRUPAL_TESTING_TEST_JAVASCRIPT=false
   global:
+    - DRUPAL_TESTING_PROJECT_BASEDIR=${TRAVIS_BUILD_DIR}/tests/module
     - PATH="$TRAVIS_BUILD_DIR/bin:$TRAVIS_BUILD_DIR/vendor/bin:$PATH"
     - DRUPAL_TESTING_PHPCS_IGNORE_PATTERN="*.md"
-
-before_install:
-  - composer config repositories.drupal composer https://packages.drupal.org/8
-  - composer config repositories.assets composer https://asset-packagist.org
-  - composer config repositories.paragraph_features git https://github.com/thunder/paragraphs_features.git
-  - composer config repositories.scheduler_content_moderation_integration git https://github.com/thunder/scheduler_content_moderation_integration.git
-  - composer require drupal/paragraphs_features:dev-8.x-1.x --no-update
-  - composer require drupal/scheduler_content_moderation_integration:dev-8.x-1.x --no-update
 
 install:
   - composer install
 
 script:
-  - test-drupal-project
+  - test-drupal-project --verbose
 
 notifications:
   email: false

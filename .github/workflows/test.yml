@@ -7,7 +7,7 @@ on:
     - cron:  '0 6 * * *'
 
 env:
-  DRUPAL_TESTING_TEST_CODING_STYLES: false
+  DRUPAL_TESTING_TEST_CODING_STYLES: true
   DRUPAL_TESTING_PROJECT_BASEDIR: ${{ github.workspace }}/tests/module
   DRUPAL_TESTING_DATABASE_USER: root
   DRUPAL_TESTING_DATABASE_PASSWORD: root
@@ -61,7 +61,9 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Run tests
-        run: test-drupal-project
+        run: |
+          composer install
+          test-drupal-project --verbose
         env:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
@@ -104,7 +106,9 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/bin"
 
       - name: Install project
-        run: test-drupal-project install
+        run: |
+          composer install
+          test-drupal-project install --verbose
 
       - name: Zip build
         run: cd /tmp; tar cfz build.tgz test; mv build.tgz ${GITHUB_WORKSPACE}
@@ -148,4 +152,4 @@ jobs:
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
 
       - name: Run the tests
-        run: test-drupal-project run_tests
+        run: test-drupal-project run_tests --verbose
