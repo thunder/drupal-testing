@@ -24,6 +24,7 @@ Parameter:
 Options:
     -h,  --help              Display this help.
     -nc, --no-cleanup        Do not cleanup after successful tests. Set this option to keep the installation.
+    -so, --stage-only        Run a stage exclusively without calling their dependencies.
     -co, --clean-only        Just run cleanup and exit.
     -v, --verbose            Verbose output
 
@@ -59,6 +60,9 @@ for i in "${@}"; do
         ;;
     -co | --clean-only)
         clean_only=true
+        ;;
+    -so | --stage-only)
+        stage_only=true
         ;;
     -nc | --no-cleanup)
         DRUPAL_TESTING_CLEANUP=false
