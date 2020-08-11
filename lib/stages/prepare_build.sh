@@ -43,8 +43,8 @@ _stage_prepare_build() {
     # Reorder repositories, to make sure, local path is first.
     composer config repositories.0 path "${DRUPAL_TESTING_PROJECT_BASEDIR}" --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
-    echo "$( jq '.repositories[0].options = {}' ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/composer.json )" > "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
-    echo "$( jq '.repositories[0].options.symlink = false' ${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/composer.json )" > "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
+    jq '.repositories[0].options = {}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
+    jq '.repositories[0].options.symlink = false' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
 
     composer config repositories.1 composer https://asset-packagist.org --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config repositories.2 composer https://packages.drupal.org/8 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
