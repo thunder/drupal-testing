@@ -4,7 +4,7 @@
 
 # Test if docker container exist, might be running or stopped
 function container_exists() {
-    [[ "$(docker ps -a -q -f name=^/"${1}"\$)" ]]
+    [[ $(docker_is_installed) ]] && [[ "$(docker ps -a -q -f name=^/"${1}"\$)" ]]
 }
 
 # Test if container is running
@@ -42,4 +42,9 @@ function wait_for_container() {
     done
 
     printf "Container started!\n"
+}
+
+# Check if docker is installed.
+function docker_is_installed() {
+  [[ -x "$(command -v docker)" ]]
 }
