@@ -38,7 +38,7 @@ _stage_install() {
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
         cd "${docroot}" || exit
-        php core/scripts/db-tools.php dump-database-d8-mysql --database-url ${SIMPLETEST_DB} >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
+        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
         cd - || exit
     fi
 }

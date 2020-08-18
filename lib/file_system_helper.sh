@@ -16,7 +16,7 @@ get_distribution_docroot() {
     if ${absolute}; then
         echo "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${docroot}"
     else
-        echo ${docroot}
+        echo "${docroot}"
     fi
 }
 
