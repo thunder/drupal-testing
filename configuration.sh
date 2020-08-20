@@ -71,6 +71,12 @@ DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote -
 # This directory gets removed after successful tests.
 DRUPAL_TESTING_TEST_BASE_DIRECTORY=${DRUPAL_TESTING_TEST_BASE_DIRECTORY:-/tmp/test/${DRUPAL_TESTING_PROJECT_NAME}}
 
+# The web servers document root directory.
+DRUPAL_TESTING_DOCROOT=${DRUPAL_TESTING_DOCROOT:-""}
+
+# Sites directory used by multisite installations.
+DRUPAL_TESTING_SITES_DIRECTORY=${DRUPAL_TESTING_SITES_DIRECTORY:-default}
+
 # The directory, where drupal will be installed, defaults to ${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/install
 # This directory gets removed after successful tests.
 DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY:-${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/install}

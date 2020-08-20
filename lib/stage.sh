@@ -7,11 +7,14 @@ run_stage() {
         return
     fi
 
-    local dependency
-    dependency=$(stage_dependency "${stage}")
+    if ! ${stage_only:-false}; then
 
-    if [[ -n ${dependency} ]]; then
-        run_stage "${dependency}"
+        local dependency
+        dependency=$(stage_dependency "${stage}")
+
+        if [[ -n ${dependency} ]]; then
+            run_stage "${dependency}"
+        fi
     fi
 
     # source the stage

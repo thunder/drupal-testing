@@ -22,8 +22,8 @@ _stage_install() {
     cd - || exit
 
     # Copy default settings and append config sync directory.
-    local sites_directory="${docroot}/sites/default"
-    cp "${sites_directory}/default.settings.php" "${sites_directory}/settings.php"
+    local sites_directory="${docroot}/sites/${DRUPAL_TESTING_SITES_DIRECTORY}"
+    cp "${docroot}/sites/default/default.settings.php" "${sites_directory}/settings.php"
     if [[ ${major_version} -gt 8 ]] || [[ ${minor_version} -gt 7 ]]; then
         echo "\$settings['config_sync_directory'] = '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}';" >>"${sites_directory}/settings.php"
     else
@@ -31,14 +31,14 @@ _stage_install() {
     fi
 
     if ${DRUPAL_TESTING_INSTALL_FROM_CONFIG} = true; then
-        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes --existing-config site-install
+        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --sites-subdir="${DRUPAL_TESTING_SITES_DIRECTORY}" --yes --existing-config site-install
     else
-        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --yes site-install "${DRUPAL_TESTING_TEST_PROFILE}" "${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}"
+        ${drush} --verbose --db-url="${SIMPLETEST_DB}" --sites-subdir="${DRUPAL_TESTING_SITES_DIRECTORY}" --yes site-install "${DRUPAL_TESTING_TEST_PROFILE}" "${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}"
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
         cd "${docroot}" || exit
-        php core/scripts/db-tools.php dump-database-d8-mysql >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
+        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
         cd - || exit
     fi
 }
