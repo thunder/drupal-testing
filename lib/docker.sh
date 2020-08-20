@@ -9,17 +9,19 @@ function container_exists() {
 
 # Test if container is running
 function container_is_running() {
-    [[ "$(docker ps -q -f name=^/"${1}"\$)" ]]
+    [[ $(docker_is_installed) ]] && [[ "$(docker ps -q -f name=^/"${1}"\$)" ]]
 }
 
 # Test if a container exists, but is stopped
 function container_is_stopped() {
-    [[ "$(docker ps -aq -f status=exited -f name=^/"${1}"\$)" ]]
+    [[ $(docker_is_installed) ]] && [[ "$(docker ps -aq -f status=exited -f name=^/"${1}"\$)" ]]
 }
 
 # Test docker container health status
 function get_container_health() {
+  if [[ $(docker_is_installed) ]]; then
     docker inspect --format "{{json .State.Health.Status }}" "${1}"
+  fi
 }
 
 # Wait till docker container is fully started
