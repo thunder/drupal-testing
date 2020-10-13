@@ -36,7 +36,6 @@ _stage_prepare_build() {
 
     # Require phpstan.
     if ${DRUPAL_TESTING_TEST_DEPRECATION}; then
-        composer require phpstan/phpstan:0.12.42 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         composer require mglaman/phpstan-drupal:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         composer require phpstan/phpstan-deprecation-rules:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
