@@ -54,6 +54,11 @@ jobs:
           key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-cache-
 
+      - name: Setup environment variables
+        run: |
+          echo "$GITHUB_WORKSPACE/vendor/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
       - name: Run tests
         run: |
           composer install
