@@ -42,6 +42,10 @@ DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK
 # E.g. DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
 DRUPAL_TESTING_TEST_GROUP=${DRUPAL_TESTING_TEST_GROUP:-""}
 
+# The phpunit test groups to exclude. To provide multiple groups, concatenate them with comma:
+# E.g. DRUPAL_TESTING_TEST_GROUP_EXCLUDE="mygroup1,mygroup2"
+DRUPAL_TESTING_TEST_GROUP_EXCLUDE=${DRUPAL_TESTING_TEST_GROUP_EXCLUDE:-""}
+
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
 DRUPAL_TESTING_TEST_CODING_STYLES=${DRUPAL_TESTING_TEST_CODING_STYLES:-true}

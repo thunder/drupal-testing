@@ -182,6 +182,11 @@ vendor/myproject the project name will be myproject. This will be used as defaul
 The phpunit test group, defaults to the value of ${DRUPAL_TESTING_PROJECT_NAME}. To provide multiple groups,
 concatenate them with comma:  DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
 
+- DRUPAL_TESTING_TEST_GROUP_EXCLUDE
+
+The phpunit test groups to exclude, defaults an empty string. To provide multiple groups,
+concatenate them with comma:  DRUPAL_TESTING_TEST_GROUP_EXCLUDE="mygroup1,mygroup2"
+
 - DRUPAL_TESTING_TEST_FILTER
 
 Only runs tests whose name matches the given regular expression pattern. 
