@@ -35,6 +35,9 @@ _stage_prepare_build() {
         composer require oomphinc/composer-installers-extender --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
+    # Add prophecy for testing.
+    composer require phpspec/prophecy-phpunit --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    
     composer require drush/drush:"^9||>=10.2.2" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Require phpstan.
