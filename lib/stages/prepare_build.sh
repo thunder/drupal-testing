@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 _stage_prepare_build() {
-    local installed_version
-    local major_version
-    local minor_version
     local docroot
     docroot=$(get_distribution_docroot false)
 
@@ -36,13 +33,6 @@ _stage_prepare_build() {
         mv "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.tmp" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
 
         composer require oomphinc/composer-installers-extender --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    fi
-
-    installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
-    major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
-    minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
-    if [[ ${major_version} -gt 8 ]] && [[ ${minor_version} -gt 0 ]]; then
-        composer require phpspec/prophecy-phpunit:^2 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
     composer require drush/drush:"^9||>=10.2.2" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
