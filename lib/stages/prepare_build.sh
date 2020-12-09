@@ -36,7 +36,7 @@ _stage_prepare_build() {
     fi
 
     # Add prophecy for testing.
-    composer require phpspec/prophecy-phpunit --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require phpspec/prophecy-phpunit --with-all-dependencies --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     composer require drush/drush:"^9||>=10.2.2" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
