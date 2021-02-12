@@ -42,7 +42,7 @@ jobs:
         with:
           coverage: none
           php-version: '7.4'
-          extensions: Imagick, gd, pdo_mysql
+          extensions: gd, pdo_mysql
 
       - name: Start MySql service
         run: |
@@ -79,7 +79,7 @@ jobs:
         with:
           coverage: none
           php-version: '7.4'
-          extensions: Imagick, gd, pdo_mysql
+          extensions: gd, pdo_mysql
 
       - name: Start MySql service
         run: |
@@ -131,7 +131,7 @@ jobs:
         with:
           coverage: none
           php-version: '7.4'
-          extensions: Imagick, gd, pdo_mysql
+          extensions: gd, pdo_mysql
 
       - name: Start MySql service
         run: |
