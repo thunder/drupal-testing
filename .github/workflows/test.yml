@@ -75,10 +75,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: shivammathur/setup-php@master
+      - uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: '7.3'
+          php-version: '7.4'
+          extensions: Imagick, gd, pdo_mysql
 
       - name: Start MySql service
         run: |
@@ -126,11 +127,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: shivammathur/setup-php@master
+      - uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: '7.3'
-          extensions: Imagick
+          php-version: '7.4'
+          extensions: Imagick, gd, pdo_mysql
 
       - name: Start MySql service
         run: |
