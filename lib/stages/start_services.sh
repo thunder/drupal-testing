@@ -38,7 +38,7 @@ _stage_start_services() {
 
     if ! port_is_open "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}"; then
         cd "${docroot}" || exit
-        php -S "${DRUPAL_TESTING_HTTP_HOST}":"${DRUPAL_TESTING_HTTP_PORT}" .ht.router.php >/dev/null 2>&1 &
+        php -S "${DRUPAL_TESTING_HTTP_HOST}":"${DRUPAL_TESTING_HTTP_PORT}" .ht.router.php &
         cd - || exit
         wait_for_port "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}" 30
     fi
