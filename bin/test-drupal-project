@@ -84,6 +84,9 @@ for i in "${@}"; do
     esac
 done
 
+# Always verbose
+export DRUPAL_TESTING_VERBOSE=true
+set -o xtrace
 ### Fallback values ###
 
 DRUPAL_TESTING_TEST_STAGE=${DRUPAL_TESTING_TEST_STAGE:-run_tests}
