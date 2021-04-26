@@ -35,5 +35,7 @@ _stage_run_tests() {
 
     local runtest="php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location}"
 
+    # Allow this process to dump cores.
+    ulimit -c unlimited
     eval "${runtest}" || exit 1
 }
