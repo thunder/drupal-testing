@@ -40,7 +40,7 @@ _stage_start_services() {
         cd "${docroot}" || exit
         # Allow this process to dump cores.
         ulimit -c unlimited
-        php -S "${DRUPAL_TESTING_HTTP_HOST}":"${DRUPAL_TESTING_HTTP_PORT}" .ht.router.php &
+        nohup php -S "${DRUPAL_TESTING_HTTP_HOST}":"${DRUPAL_TESTING_HTTP_PORT}" .ht.router.php &
         cd - || exit
         wait_for_port "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}" 30
     fi
