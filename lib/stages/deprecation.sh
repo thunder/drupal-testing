@@ -10,7 +10,7 @@ _stage_deprecation() {
         project_location=$(get_project_location)
         composer_bin_dir=$(get_composer_bin_directory)
 
-        if [ ! -f "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}phpstan.neon" ]; then
+        if [ ! -f "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/phpstan.neon" ]; then
             cp phpstan.neon "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         fi
 
