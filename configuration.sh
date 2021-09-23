@@ -107,7 +107,7 @@ DRUPAL_TESTING_SELENIUM_CHROME_VERSION=${DRUPAL_TESTING_SELENIUM_CHROME_VERSION:
 
 # The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
 # When selenium is used, specify DRUPAL_TESTING_SELENIUM_CHROME_VERSION instead.
-DRUPAL_TESTING_CHROMEDRIVER_VERSION=${DRUPAL_TESTING_CHROMEDRIVER_VERSION:-$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_77)}
+DRUPAL_TESTING_CHROMEDRIVER_VERSION=${DRUPAL_TESTING_CHROMEDRIVER_VERSION:-$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_87)}
 
 # The selenium host. Defaults to the web server host.
 DRUPAL_TESTING_SELENIUM_HOST=${DRUPAL_TESTING_SELENIUM_HOST:-${DRUPAL_TESTING_HTTP_HOST}}
