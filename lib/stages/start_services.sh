@@ -30,7 +30,7 @@ _stage_start_services() {
             docker run --detach --net host --name "${DRUPAL_TESTING_SELENIUM_DOCKER_NAME}" --volume "${DRUPAL_TESTING_PROJECT_BASEDIR}":/project --volume /dev/shm:/dev/shm selenium/standalone-chrome:"${DRUPAL_TESTING_SELENIUM_CHROME_VERSION}"
         else
             download_chromedriver
-            "${DRUPAL_TESTING_TEST_BASE_DIRECTORY}"/chromedriver --port="${DRUPAL_TESTING_SELENIUM_PORT}" --url-base=/wd/hub &
+            "${DRUPAL_TESTING_TEST_BASE_DIRECTORY}"/chromedriver --verbose --port="${DRUPAL_TESTING_SELENIUM_PORT}" --url-base=/wd/hub &
         fi
 
         wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
