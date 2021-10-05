@@ -32,7 +32,7 @@ _stage_build() {
         local docroot
         docroot=$(get_distribution_docroot)
         cd "${docroot}" || exit
-        wget wget https://www.drupal.org/files/issues/2021-10-05/3240601%2B3240813-9.2.x.patch
+        wget https://www.drupal.org/files/issues/2021-10-05/3240601%2B3240813-9.2.x.patch
         patch -p1 < 3240601+3240813-9.2.x.patch
         cd - || exit
     fi
