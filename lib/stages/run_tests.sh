@@ -19,7 +19,7 @@ _stage_run_tests() {
           phpunit=${phpunit}" -f"
         fi
     else
-        phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit
+        phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --verbose --debug"
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_GROUP} ]]; then
@@ -42,7 +42,7 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="php ${phpunit} --verbose --debug --configuration ${docroot}/core ${test_selection} ${project_location}"
+    local runtest="php ${phpunit} --configuration ${docroot}/core ${test_selection} ${project_location}"
 
     eval "${runtest}" || exit 1
 }
