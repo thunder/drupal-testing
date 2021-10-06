@@ -13,9 +13,9 @@ _stage_run_tests() {
     local test_selection=""
     local phpunit=""
 
-    if [[ ${DRUPAL_TESTING_PARALLEL_TESTING} ]]; then
+    if ${DRUPAL_TESTING_PARALLEL_TESTING}; then
         phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/paratest" -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
-        if [[ ${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION} ]]; then
+        if ${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}; then
           phpunit=${phpunit}" -f"
         fi
     else
