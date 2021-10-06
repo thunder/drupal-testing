@@ -43,6 +43,11 @@ _stage_prepare_build() {
         composer require phpstan/phpstan-deprecation-rules:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
+    # Paratest
+    if [[ ${DRUPAL_TESTING_PARALLEL_TESTING} ]]; then
+        composer require brianium/paratest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    fi
+
     # Reorder repositories, to make sure, local path is first.
     composer config repositories.0 path "${DRUPAL_TESTING_PROJECT_BASEDIR}" --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
