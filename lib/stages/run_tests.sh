@@ -18,6 +18,9 @@ _stage_run_tests() {
         if ${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}; then
           phpunit=${phpunit}" -f"
         fi
+        if ${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}; then
+          phpunit=${phpunit}" --runner WrapperRunner"
+        fi
     else
         phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --debug"
     fi
