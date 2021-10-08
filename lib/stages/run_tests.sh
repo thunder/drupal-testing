@@ -18,7 +18,7 @@ _stage_run_tests() {
         if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
           phpunit=${phpunit}" -f"
         fi
-        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}" = true]; then
+        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}" = true ]; then
           phpunit=${phpunit}" --runner WrapperRunner"
         fi
     fi
