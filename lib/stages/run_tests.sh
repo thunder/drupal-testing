@@ -11,9 +11,9 @@ _stage_run_tests() {
     project_location=$(get_project_location)
 
     local test_selection=""
-    local phpunit=""
+    local phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --debug"
 
-    if ${DRUPAL_TESTING_PARALLEL_TESTING}; then
+    if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
         phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/paratest" -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
         if ${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}; then
           phpunit=${phpunit}" -f"
@@ -21,8 +21,6 @@ _stage_run_tests() {
         if ${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}; then
           phpunit=${phpunit}" --runner WrapperRunner"
         fi
-    else
-        phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --debug"
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_GROUP} ]]; then
