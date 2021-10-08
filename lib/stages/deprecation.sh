@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _stage_deprecation() {
-    if ${DRUPAL_TESTING_TEST_DEPRECATION}; then
+    if [ "${DRUPAL_TESTING_TEST_DEPRECATION}" = true ]; then
         printf "Checking for deprecations.\n\n"
 
         local project_location

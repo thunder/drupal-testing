@@ -15,10 +15,10 @@ _stage_run_tests() {
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
         phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/paratest" -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
-        if ${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}; then
+        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
           phpunit=${phpunit}" -f"
         fi
-        if ${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}; then
+        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}" = true]; then
           phpunit=${phpunit}" --runner WrapperRunner"
         fi
     fi
