@@ -45,7 +45,7 @@ _stage_prepare_build() {
 
     # Paratest.
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
-        composer require brianium/paratest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+        composer require brianium/paratest:^4 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
     # Reorder repositories, to make sure, local path is first.
