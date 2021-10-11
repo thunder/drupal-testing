@@ -14,12 +14,12 @@ _stage_run_tests() {
     local phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --debug"
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
-        phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/paratest" -p  --verbose=1 "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
+        phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/paratest" -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
         if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
           phpunit=${phpunit}" -f"
         fi
         if [ "${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}" = true ]; then
-          phpunit=${phpunit}" --runner WrapperRunner --verbose"
+          phpunit=${phpunit}" --runner WrapperRunner"
         fi
     fi
 
@@ -43,7 +43,7 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="php ${phpunit} --configuration ${docroot}/core ${test_selection} ${project_location}"
+    local runtest="php ${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${project_location}"
 
     eval "${runtest}" || exit 1
 }
