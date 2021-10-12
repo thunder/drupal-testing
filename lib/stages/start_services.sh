@@ -26,7 +26,7 @@ _stage_start_services() {
     if ! port_is_open "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"; then
         printf "Starting web driver\n"
 
-        if ${DRUPAL_TESTING_USE_SELENIUM} = true; then
+        if [ "${DRUPAL_TESTING_USE_SELENIUM}"  = true ]; then
             docker run --detach --net host --name "${DRUPAL_TESTING_SELENIUM_DOCKER_NAME}" --volume "${DRUPAL_TESTING_PROJECT_BASEDIR}":/project --volume /dev/shm:/dev/shm selenium/standalone-chrome:"${DRUPAL_TESTING_SELENIUM_CHROME_VERSION}"
         else
             download_chromedriver

@@ -34,6 +34,9 @@ _stage_build() {
         cd "${docroot}" || exit
         wget https://www.drupal.org/files/issues/2021-10-05/3240601%2B3240813-9.2.x.patch
         patch -p1 < 3240601+3240813-9.2.x.patch
+
+        wget https://www.drupal.org/files/issues/2021-10-05/3192365-17-mkdir-race-condition-in-tests.patch
+        patch -p1 < 3192365-17-mkdir-race-condition-in-tests.patch
         cd - || exit
     fi
 

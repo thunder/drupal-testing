@@ -38,9 +38,14 @@ _stage_prepare_build() {
     composer require drush/drush:"^9||>=10.2.2" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Require phpstan.
-    if ${DRUPAL_TESTING_TEST_DEPRECATION}; then
+    if [ "${DRUPAL_TESTING_TEST_DEPRECATION}" = true ]; then
         composer require mglaman/phpstan-drupal:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         composer require phpstan/phpstan-deprecation-rules:~0.12.0 --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    fi
+
+    # Paratest.
+    if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
+        composer require brianium/paratest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
 
     # Reorder repositories, to make sure, local path is first.
