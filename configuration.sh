@@ -103,7 +103,7 @@ DRUPAL_TESTING_HTTP_PORT=${DRUPAL_TESTING_HTTP_PORT:-8888}
 DRUPAL_TESTING_USE_SELENIUM=${DRUPAL_TESTING_USE_SELENIUM:-${CI}}
 
 # The selenium chrome docker version to use. defaults to the latest version.
-DRUPAL_TESTING_SELENIUM_CHROME_VERSION=${DRUPAL_TESTING_SELENIUM_CHROME_VERSION:-"3.141.59-oxygen"}
+DRUPAL_TESTING_SELENIUM_CHROME_VERSION=${DRUPAL_TESTING_SELENIUM_CHROME_VERSION:-"latest"}
 
 # The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
 # When selenium is used, specify DRUPAL_TESTING_SELENIUM_CHROME_VERSION instead.
