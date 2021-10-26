@@ -31,6 +31,10 @@ _stage_run_tests() {
         test_selection="${test_selection} --exclude-group ${DRUPAL_TESTING_TEST_GROUP_EXCLUDE}"
     fi
 
+    if [[ ${DRUPAL_TESTING_TEST_SUITE} ]]; then
+        test_selection="${test_selection} --testsuite ${DRUPAL_TESTING_TEST_SUITE}"
+    fi
+
      if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
         # Database needs to be initialized, if the run was split into a build and a test run.
          if [[ -x "$(command -v mysql)" ]]; then

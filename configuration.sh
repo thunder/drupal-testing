@@ -46,6 +46,10 @@ DRUPAL_TESTING_TEST_GROUP=${DRUPAL_TESTING_TEST_GROUP:-""}
 # E.g. DRUPAL_TESTING_TEST_GROUP_EXCLUDE="mygroup1,mygroup2"
 DRUPAL_TESTING_TEST_GROUP_EXCLUDE=${DRUPAL_TESTING_TEST_GROUP_EXCLUDE:-""}
 
+# The phpunit testsuite. To provide multiple suites, concatenate them with comma:
+# E.g. DRUPAL_TESTING_TEST_SUITE="functional,kernel"
+DRUPAL_TESTING_TEST_SUITE=${DRUPAL_TESTING_TEST_SUITE:-""}
+
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
 DRUPAL_TESTING_TEST_CODING_STYLES=${DRUPAL_TESTING_TEST_CODING_STYLES:-true}
