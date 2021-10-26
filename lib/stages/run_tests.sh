@@ -33,6 +33,7 @@ _stage_run_tests() {
 
     if [[ ${DRUPAL_TESTING_TEST_SUITE} ]]; then
         test_selection="${test_selection} --testsuite ${DRUPAL_TESTING_TEST_SUITE}"
+        project_location=""
     fi
 
      if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
