@@ -56,3 +56,12 @@ get_project_location() {
     fi
     echo "${project_type_test_location}"
 }
+
+jqi() {
+  local query=${1}
+  local file=${2}
+  local temp_file="${file}".tmp
+
+  jq "${query}" "${file}" > "${temp_file}" && mv "${temp_file}" "${file}"
+}
+
