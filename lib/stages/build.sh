@@ -37,6 +37,9 @@ _stage_build() {
 
         wget https://www.drupal.org/files/issues/2021-10-05/3192365-17-mkdir-race-condition-in-tests.patch
         patch -p1 < 3192365-17-mkdir-race-condition-in-tests.patch
+
+        wget https://www.drupal.org/files/issues/2021-11-02/3032275-64.patch
+        patch -p1 < 3032275-64.patch
         cd - || exit
     fi
 
