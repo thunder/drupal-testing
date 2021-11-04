@@ -70,7 +70,6 @@ for i in "${@}"; do
         ;;
     -v | --verbose)
         export DRUPAL_TESTING_VERBOSE=true
-        set -o xtrace
         ;;
     -?*)
         printf "Unknown option: %s\n" "${i}"
@@ -92,6 +91,10 @@ SCRIPT_DIR=$(get_script_dir)
 ### Source required files ###
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/../configuration.sh"
+
+if [ "${DRUPAL_TESTING_VERBOSE}" = true ] ; then
+    set -o xtrace
+fi
 
 for library in "${SCRIPT_DIR}"/../lib/*.sh; do
     # shellcheck source=/dev/null
