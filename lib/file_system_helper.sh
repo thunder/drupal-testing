@@ -64,4 +64,3 @@ jqi() {
 
   jq "${query}" "${file}" > "${temp_file}" && mv "${temp_file}" "${file}"
 }
-
