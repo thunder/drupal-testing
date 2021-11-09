@@ -29,12 +29,12 @@ _stage_build() {
     if [[ ${major_version} -gt 8 ]] && [[ ${minor_version} -gt 1 ]]; then
         composer require phpspec/prophecy-phpunit:^2 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         # Apply core patch
-        #local docroot
-        #docroot=$(get_distribution_docroot)
-        #cd "${docroot}" || exit
-        #wget https://www.drupal.org/files/issues/2021-10-05/3192365-17-mkdir-race-condition-in-tests.patch
-        #patch -p1 < 3192365-17-mkdir-race-condition-in-tests.patch
-        #cd - || exit
+        local docroot
+        docroot=$(get_distribution_docroot)
+        cd "${docroot}" || exit
+        wget https://www.drupal.org/files/issues/2021-11-03/3032275-78.patch
+        patch -p1 < 3032275-78.patch
+        cd - || exit
     fi
 
 

@@ -103,7 +103,7 @@ DRUPAL_TESTING_HTTP_PORT=${DRUPAL_TESTING_HTTP_PORT:-8888}
 DRUPAL_TESTING_USE_SELENIUM=${DRUPAL_TESTING_USE_SELENIUM:-${CI}}
 
 # The selenium chrome docker version to use. defaults to the latest version.
-DRUPAL_TESTING_SELENIUM_CHROME_VERSION=${DRUPAL_TESTING_SELENIUM_CHROME_VERSION:-3.141.59-oxygen}
+DRUPAL_TESTING_SELENIUM_CHROME_VERSION=${DRUPAL_TESTING_SELENIUM_CHROME_VERSION:-"latest"}
 
 # The chromedriver version to use. Defaults to the latest version. This is only used, for direct chromedriver calls.
 # When selenium is used, specify DRUPAL_TESTING_SELENIUM_CHROME_VERSION instead.
@@ -161,7 +161,7 @@ export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TESTING_HTTP_HOST}:${DRUPAL_TESTING_HTTP_PORT}}
 
 # The driver args for webdriver.
-export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", null, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/wd/hub\"]"}
+export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", {\"chromeOptions\": {\"w3c\": false } }, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/wd/hub\"]"}
 
 # Increase composer memory limit.
 export COMPOSER_MEMORY_LIMIT=${COMPOSER_MEMORY_LIMIT:-"-1"}
