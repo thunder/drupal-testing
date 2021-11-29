@@ -20,27 +20,22 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4, 5]
+        RUN: [1, 2, 3, 4]
         include:
           - RUN: 1
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.8.0'
-            PHP_VERSION: '7.4'
-          - RUN: 2
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.2'
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             PHP_VERSION: '7.4'
-          - RUN: 3
-            DRUPAL_TESTING_DRUPAL_VERSION: '~8.9.0'
+          - RUN: 2
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.1.0'
             DRUPAL_TESTING_MIN_BUILD: true
             PHP_VERSION: '7.4'
-          - RUN: 4
+          - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.0.0'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.2.0'
             PHP_VERSION: '7.4'
-          - RUN: 5
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.0'
-            PHP_VERSION: '7.4'
-          - RUN: 5
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.0'
+          - RUN: 4
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.2'
             PHP_VERSION: '8.0'
 
     steps:
