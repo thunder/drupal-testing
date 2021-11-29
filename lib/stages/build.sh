@@ -26,15 +26,21 @@ _stage_build() {
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
     minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
-    if [[ ${major_version} -gt 8 ]] && [[ ${minor_version} -gt 1 ]]; then
+    if [[ ${major_version} -gt 8 ]]; then
         composer require phpspec/prophecy-phpunit:^2 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         # Apply core patch
-        #local docroot
-        #docroot=$(get_distribution_docroot)
-        #cd "${docroot}" || exit
-        #wget https://www.drupal.org/files/issues/2021-10-05/3192365-17-mkdir-race-condition-in-tests.patch
-        #patch -p1 < 3192365-17-mkdir-race-condition-in-tests.patch
-        #cd - || exit
+        local docroot
+        docroot=$(get_distribution_docroot)
+        cd "${docroot}" || exit
+        if [[ ${minor_version} -lt 3 ]]; then
+
+          wget https://www.drupal.org/files/issues/2021-10-05/3240601%2B3240813-9.2.x.patch -O 3240601.patch
+          patch -p1 < 3240601.patch
+
+          wget https://www.drupal.org/files/issues/2021-11-03/3032275-78.patch
+          patch -p1 < 3032275-78.patch
+        fi
+        cd - || exit
     fi
 
 
