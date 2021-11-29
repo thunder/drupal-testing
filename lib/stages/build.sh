@@ -27,7 +27,6 @@ _stage_build() {
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
     minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
     if [[ ${major_version} -gt 8 ]]; then
-        composer require phpspec/prophecy-phpunit:^2 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
         # Apply core patch
         local docroot
         docroot=$(get_distribution_docroot)
