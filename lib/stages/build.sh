@@ -26,7 +26,7 @@ _stage_build() {
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
     major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
     minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
-    if [[ ${major_version} -gt 8 ]]; then
+     if [[ ${major_version} -gt 8 ]] && [[ ${minor_version} -gt 1 ]]; then
         # Apply core patch
         local docroot
         docroot=$(get_distribution_docroot)
