@@ -5,10 +5,10 @@ _stage_run_tests() {
 
     local docroot
     local composer_bin_dir
-    local project_location
+    local test_location
     docroot=$(get_distribution_docroot)
     composer_bin_dir=$(get_composer_bin_directory)
-    project_location=$(get_project_location)
+    test_location=$(get_project_location)
 
     local test_selection=""
     local phpunit=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/phpunit" --debug"
@@ -33,11 +33,11 @@ _stage_run_tests() {
 
     if [[ ${DRUPAL_TESTING_TEST_SUITE} ]]; then
         test_selection="${test_selection} --testsuite ${DRUPAL_TESTING_TEST_SUITE}"
-        project_location=""
+        test_location=""
     fi
 
-    if [[ ${DRUPAL_TESTING_TEST_SUITE_FILE} ]]; then
-        project_location="${DRUPAL_TESTING_TEST_SUITE_FILE}"
+    if [[ ${DRUPAL_TESTING_TEST_PATH} ]]; then
+        test_location="${DRUPAL_TESTING_TEST_PATH}"
     fi
 
      if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
@@ -52,7 +52,7 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="php ${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${project_location}"
+    local runtest="php ${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${test_location}"
 
     eval "${runtest}" || exit 1
 }
