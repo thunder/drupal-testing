@@ -50,6 +50,9 @@ DRUPAL_TESTING_TEST_GROUP_EXCLUDE=${DRUPAL_TESTING_TEST_GROUP_EXCLUDE:-""}
 # E.g. DRUPAL_TESTING_TEST_SUITE="functional,kernel"
 DRUPAL_TESTING_TEST_SUITE=${DRUPAL_TESTING_TEST_SUITE:-""}
 
+# Path to a testsuite file.
+DRUPAL_TESTING_TEST_SUITE_FILE=${DRUPAL_TESTING_TEST_SUITE_FILE:-""}
+
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
 DRUPAL_TESTING_TEST_CODING_STYLES=${DRUPAL_TESTING_TEST_CODING_STYLES:-true}
