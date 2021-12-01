@@ -38,6 +38,9 @@ DRUPAL_TESTING_COMPOSER_NAME=${DRUPAL_TESTING_COMPOSER_NAME:-$(jq -r .name "${DR
 # vendor/myproject the project name will be myproject.
 DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo "${DRUPAL_TESTING_COMPOSER_NAME}" | cut -d '/' -f 2)" '.extra."installer-name" // $FALLBACK' "${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json")}
 
+# Path for phpunit to search for test files. Default is the current project folder.
+DRUPAL_TESTING_TEST_PATH=${DRUPAL_TESTING_TEST_PATH:-""}
+
 # The phpunit test group. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TESTING_TEST_GROUP="mygroup1,mygroup2"
 DRUPAL_TESTING_TEST_GROUP=${DRUPAL_TESTING_TEST_GROUP:-""}
@@ -45,6 +48,10 @@ DRUPAL_TESTING_TEST_GROUP=${DRUPAL_TESTING_TEST_GROUP:-""}
 # The phpunit test groups to exclude. To provide multiple groups, concatenate them with comma:
 # E.g. DRUPAL_TESTING_TEST_GROUP_EXCLUDE="mygroup1,mygroup2"
 DRUPAL_TESTING_TEST_GROUP_EXCLUDE=${DRUPAL_TESTING_TEST_GROUP_EXCLUDE:-""}
+
+# The phpunit testsuite. To provide multiple suites, concatenate them with comma:
+# E.g. DRUPAL_TESTING_TEST_SUITE="functional,kernel"
+DRUPAL_TESTING_TEST_SUITE=${DRUPAL_TESTING_TEST_SUITE:-""}
 
 # Boolean value if coding styles should be tested with burdamagazinorg/thunder-dev-tools.
 # By default coding styles are tested.
