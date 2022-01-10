@@ -13,7 +13,7 @@ _stage_deprecation() {
         fi
 
         cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
-        composer exec --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}" phpstan -- analyse --memory-limit "${PHPSTAN_MEMORY_LIMIT}" "${project_location}"
+        composer exec --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" phpstan -- analyse --memory-limit "${PHPSTAN_MEMORY_LIMIT}" "${project_location}"
         cd - || exit
     fi
 }
