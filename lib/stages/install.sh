@@ -5,15 +5,13 @@ _stage_install() {
     printf "Installing project\n\n"
 
     local docroot
-    local composer_bin_dir
     local drush
     local installed_version
     local major_version
     local minor_version
 
     docroot=$(get_distribution_docroot)
-    composer_bin_dir=$(get_composer_bin_directory)
-    drush="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/${composer_bin_dir}/drush  --root=${docroot}"
+    drush="composer exec drush --root=${docroot}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
