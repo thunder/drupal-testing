@@ -50,7 +50,7 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="php ${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${test_location}"
+    local runtest="${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${test_location}"
 
     eval "${runtest}" || exit 1
 }
