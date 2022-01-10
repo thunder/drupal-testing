@@ -11,7 +11,7 @@ _stage_install() {
     local minor_version
 
     docroot=$(get_distribution_docroot)
-    drush="composer exec -- drush --root=${docroot}"
+    drush="composer exec --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}" -- drush --root=${docroot}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')

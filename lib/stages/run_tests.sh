@@ -9,10 +9,10 @@ _stage_run_tests() {
     test_location=$(get_project_location)
 
     local test_selection=""
-    local phpunit="composer exec -- phpunit --debug"
+    local phpunit="composer exec --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}" -- phpunit --debug"
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
-        phpunit="composer exec -- paratest -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
+        phpunit="composer exec --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}" -- paratest -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
         if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
           phpunit=${phpunit}" -f"
         fi
