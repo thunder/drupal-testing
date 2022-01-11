@@ -29,11 +29,13 @@ _stage_install() {
         echo "\$config_directories = [ CONFIG_SYNC_DIRECTORY => '${DRUPAL_TESTING_CONFIG_SYNC_DIRECTORY}' ];" >>"${sites_directory}/settings.php"
     fi
 
+    cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     if [ "${DRUPAL_TESTING_INSTALL_FROM_CONFIG}" = true ]; then
         ${drush} --verbose --db-url="${SIMPLETEST_DB}" --sites-subdir="${DRUPAL_TESTING_SITES_DIRECTORY}" --yes --existing-config site-install
     else
         ${drush} --verbose --db-url="${SIMPLETEST_DB}" --sites-subdir="${DRUPAL_TESTING_SITES_DIRECTORY}" --yes site-install "${DRUPAL_TESTING_TEST_PROFILE}" "${DRUPAL_TESTING_INSTALLATION_FORM_VALUES}"
     fi
+    cd - || exit
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
         cd "${docroot}" || exit
