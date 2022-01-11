@@ -53,6 +53,6 @@ _stage_run_tests() {
     local runtest="${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${test_location}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
-    eval "${runtest}" || exit 1
+    eval "COMPOSER_PROCESS_TIMEOUT=0 ${runtest}" || exit 1
     cd - || exit
 }
