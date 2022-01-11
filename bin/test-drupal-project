@@ -88,6 +88,9 @@ done
 DRUPAL_TESTING_TEST_STAGE=${DRUPAL_TESTING_TEST_STAGE:-run_tests}
 SCRIPT_DIR=$(get_script_dir)
 
+# Reset COMPOSER_BIN_DIR, otherwise composer exec will not work as expected in composer versions > 2.2.2
+unset COMPOSER_BIN_DIR
+
 ### Source required files ###
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/../configuration.sh"

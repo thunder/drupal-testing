@@ -20,16 +20,6 @@ get_distribution_docroot() {
     fi
 }
 
-get_composer_bin_directory() {
-    if [[ ! -f "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json ]]; then
-        exit 1
-    fi
-
-    local composer_bin_dir=${DRUPAL_TESTING_COMPOSER_BIN_DIR:-$(jq -er '.config."bin-dir" // "vendor/bin"' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"/composer.json)}
-
-    echo "${composer_bin_dir}"
-}
-
 get_project_location() {
     local docroot
     local project_type_test_location=""
