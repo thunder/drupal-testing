@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4]
+        RUN: [1, 2, 3, 4, 5]
         include:
           - RUN: 1
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
