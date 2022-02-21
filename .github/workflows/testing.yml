@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4]
+        RUN: [1, 2, 3, 4, 5]
         include:
           - RUN: 1
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
@@ -37,6 +37,9 @@ jobs:
           - RUN: 4
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
             PHP_VERSION: '8.0'
+          - RUN: 5
+            DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
+            PHP_VERSION: '8.1'
 
     steps:
       - uses: actions/checkout@v1
