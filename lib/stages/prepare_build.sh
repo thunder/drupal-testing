@@ -56,10 +56,9 @@ _stage_prepare_build() {
 
     composer config repositories.1 composer https://asset-packagist.org --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     if [ "${DRUPAL_TESTING_USE_LENIENT_ENDPOINT}" = true ]; then
-      composer config repositories.2 composer https://packages.drupal.org/lenient --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    else
-      composer config repositories.2 composer https://packages.drupal.org/8 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+      composer config repositories.lenient composer https://packages.drupal.org/lenient --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     fi
+    composer config repositories.2 composer https://packages.drupal.org/8 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Enable patching
     composer require cweagans/composer-patches --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
