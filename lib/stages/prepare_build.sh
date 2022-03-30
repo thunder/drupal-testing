@@ -67,10 +67,10 @@ _stage_prepare_build() {
     done
 
     # Allow required plugins
-    composer config allow-plugins.cweagans/composer-patches true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer config allow-plugins.drupal/core-composer-scaffold true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer config allow-plugins.drupal/core-project-message true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer config allow-plugins.composer/installers true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer config allow-plugins.oomphinc/composer-installers-extender true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.cweagans/composer-patches true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.drupal/core-composer-scaffold true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.drupal/core-project-message true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.composer/installers true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.oomphinc/composer-installers-extender true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 }
