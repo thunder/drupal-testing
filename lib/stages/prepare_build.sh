@@ -72,4 +72,5 @@ _stage_prepare_build() {
     composer config allow-plugins.drupal/core-project-message true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.composer/installers true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.oomphinc/composer-installers-extender true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true --no-interaction --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 }
