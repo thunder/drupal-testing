@@ -19,5 +19,10 @@
         "php": ">=7.2",
         "drupal/coder": "^8.3",
         "symfony/yaml": "^3.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
