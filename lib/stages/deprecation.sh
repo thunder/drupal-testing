@@ -8,12 +8,8 @@ _stage_deprecation() {
 
         project_location=$(get_project_location)
 
-        if [ ! -f "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/phpstan.neon" ]; then
-            cp phpstan.neon "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-        fi
-
         cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
-        composer exec phpstan -- analyse --memory-limit "${PHPSTAN_MEMORY_LIMIT}" "${project_location}"
+        composer exec phpstan -- analyse --memory-limit "${PHPSTAN_MEMORY_LIMIT}" "${project_location}" --configuration="${project_location}/phpstan.neon"
         cd - || exit
     fi
 }
