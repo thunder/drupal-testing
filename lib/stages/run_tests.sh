@@ -50,7 +50,7 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="${phpunit} --verbose --configuration ${docroot}/core ${test_selection} ${test_location}"
+    local runtest="${phpunit} --verbose --coverage-filter ${docroot} --coverage-html $(get_project_location)/coverage --configuration ${docroot}/core ${test_selection} ${test_location}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     eval "COMPOSER_PROCESS_TIMEOUT=0 ${runtest}" || exit 1
