@@ -12,6 +12,7 @@ env:
   DRUPAL_TESTING_DATABASE_USER: root
   DRUPAL_TESTING_DATABASE_PASSWORD: root
   DRUPAL_TESTING_DATABASE_ENGINE: mysql
+  DRUPAL_TESTING_SELENIUM_CHROME_VERSION: '105.0'
 
 jobs:
   test-projects:
@@ -20,26 +21,30 @@ jobs:
 
     strategy:
       matrix:
-        RUN: [1, 2, 3, 4, 5]
+        RUN: [1, 2, 3, 4, 5, 6]
         include:
           - RUN: 1
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.5'
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
-            PHP_VERSION: '7.4'
+            PHP_VERSION: '8.1'
           - RUN: 2
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.2.0'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.4.0'
             DRUPAL_TESTING_MIN_BUILD: true
             PHP_VERSION: '7.4'
           - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
-            DRUPAL_TESTING_DRUPAL_VERSION: '~9.3.0'
-            PHP_VERSION: '7.4'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~9.4.0'
+            PHP_VERSION: '8.1'
           - RUN: 4
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
             PHP_VERSION: '8.0'
           - RUN: 5
             DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
             PHP_VERSION: '8.1'
+          - RUN: 6
+            DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
+            PHP_VERSION: '8.2'
+            DRUPAL_TESTING_PARALLEL_TESTING: true
 
     steps:
       - uses: actions/checkout@v1
