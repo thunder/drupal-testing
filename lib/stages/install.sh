@@ -39,9 +39,9 @@ _stage_install() {
 
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
         cd "${docroot}" || exit
-        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.php"
-        # Zip sites/default files directory but exclude config_*, php and styles directories.
-        zip -r "${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.zip" sites/default/files -x "sites/default/files/config_*" "sites/default/files/php" "sites/default/files/styles"
+        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.database.php"
+        # Gzip sites/default files directory but exclude config_*, php and styles directories.
+        tar -czf "${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.files.tar.gz" --exclude='config_*' --exclude='php' --exclude='styles' sites/default/files
         cd - || exit
     fi
 }
