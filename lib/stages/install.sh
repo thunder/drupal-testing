@@ -41,7 +41,7 @@ _stage_install() {
         cd "${docroot}" || exit
         php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.database.php"
         # Gzip sites/default files directory but exclude config_*, php and styles directories.
-        tar -czf "${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.files.tar.gz" --exclude='config_*' --exclude='php' --exclude='styles' sites/default/files
+        tar -czf "${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}.files.tar.gz" --exclude='config_*' --exclude='php' --exclude='styles' --directory='sites/default' files
         cd - || exit
     fi
 }
