@@ -38,11 +38,11 @@ _stage_run_tests() {
         test_location="${DRUPAL_TESTING_TEST_PATH}"
     fi
 
-    if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} != "" ]]; then
+     if [[ -f ${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE} ]]; then
         # Database needs to be initialized, if the run was split into a build and a test run.
-        if [[ -x "$(command -v mysql)" ]]; then
+         if [[ -x "$(command -v mysql)" ]]; then
             mysql --host="${DRUPAL_TESTING_DATABASE_HOST}" --port="${DRUPAL_TESTING_DATABASE_PORT}" --user="${DRUPAL_TESTING_DATABASE_USER}" --password="${DRUPAL_TESTING_DATABASE_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${DRUPAL_TESTING_DATABASE_NAME};"
-        fi
+         fi
         export thunderDumpFile=${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}
     fi
 
