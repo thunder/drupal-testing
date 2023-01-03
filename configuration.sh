@@ -24,10 +24,6 @@ DRUPAL_TESTING_PROJECT_TYPE=${DRUPAL_TESTING_PROJECT_TYPE:-$(jq -er '.type // "p
 # for every test. This is currently supported only by the thunder distribution.
 DRUPAL_TESTING_TEST_DUMP_FILE=${DRUPAL_TESTING_TEST_DUMP_FILE:-""}
 
-# Setting this to a filename, creates a file archive from an installation, that can be used by all tests, instead of reinstalling
-# for every test. This is currently supported only by the thunder distribution.
-DRUPAL_TESTING_TEST_DUMP_FILE=${DRUPAL_TESTING_TEST_FILES:-""}
-
 # The drupal profile that is used in the tests.
 DRUPAL_TESTING_TEST_PROFILE=${DRUPAL_TESTING_TEST_PROFILE:-minimal}
 
