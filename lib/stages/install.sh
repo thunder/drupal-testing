@@ -39,11 +39,11 @@ _stage_install() {
 
     cd "${docroot}" || exit
     if [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} == *.php  ]]; then
-        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}"
+        php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"${DRUPAL_TESTING_TEST_DUMP_FILE}"
     elif [[ ${DRUPAL_TESTING_TEST_DUMP_FILE} == *.tar.gz ]]; then
         php core/scripts/db-tools.php dump-database-d8-mysql --database-url "${SIMPLETEST_DB}" >"sites/default/database-dump.php"
         # Gzip sites/default files directory but exclude config_*, php and styles directories.
-        tar -czf "${docroot}/${DRUPAL_TESTING_TEST_DUMP_FILE}" --exclude='config_*' --exclude='php' --exclude='styles' --directory='sites/default' files database-dump.php
+        tar -czf "${DRUPAL_TESTING_TEST_DUMP_FILE}" --exclude='config_*' --exclude='php' --exclude='styles' --directory='sites/default' files database-dump.php
     fi
     cd - || exit
 
