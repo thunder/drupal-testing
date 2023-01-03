@@ -22,6 +22,9 @@ DRUPAL_TESTING_PROJECT_TYPE=${DRUPAL_TESTING_PROJECT_TYPE:-$(jq -er '.type // "p
 
 # Setting this to a filename, creates a dump from an installation, that can be used by all tests, instead of reinstalling
 # for every test. This is currently supported only by the thunder distribution.
+# The behavior differs based on the file extension:
+# - .php: Only the database php dump will be created and used.
+# - .tar.gz: A tar will be created, that contains the database php dump and the files directory.
 DRUPAL_TESTING_TEST_DUMP_FILE=${DRUPAL_TESTING_TEST_DUMP_FILE:-""}
 
 # The drupal profile that is used in the tests.
