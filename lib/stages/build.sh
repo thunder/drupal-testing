@@ -7,7 +7,7 @@ _stage_build() {
     local composer_arguments=""
 
     if ${DRUPAL_TESTING_MIN_BUILD}; then
-        composer_arguments="--prefer-lowest"
+        composer_arguments="--prefer-lowest --prefer-stable"
     fi
 
     # require the project, we want to test. To make sure, that the local version is used, we rename the project first
