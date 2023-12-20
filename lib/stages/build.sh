@@ -20,28 +20,6 @@ _stage_build() {
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     composer update ${composer_arguments}
 
-    local installed_version
-    local major_version
-    local minor_version
-    installed_version=$(composer show 'drupal/core' | grep 'versions' | grep -o -E '[^ ]+$')
-    major_version="$(cut -d'.' -f1 <<<"${installed_version}")"
-    minor_version="$(cut -d'.' -f2 <<<"${installed_version}")"
-    if [[ ${major_version} -gt 8 ]] && [[ ${minor_version} -gt 1 ]]; then
-        # Apply core patch
-        local docroot
-        docroot=$(get_distribution_docroot)
-        cd "${docroot}" || exit
-        if [[ ${minor_version} -lt 3 ]]; then
-            wget https://www.drupal.org/files/issues/2021-10-05/3240601%2B3240813-9.2.x.patch -O 3240601.patch
-            patch -p1 < 3240601.patch
-
-            wget https://www.drupal.org/files/issues/2021-11-03/3032275-78.patch
-            patch -p1 < 3032275-78.patch
-        fi
-        cd - || exit
-    fi
-
-
     # We can cleanup the name change now.
     composer config name "${DRUPAL_TESTING_COMPOSER_NAME}" --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}"
 
