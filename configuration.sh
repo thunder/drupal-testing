@@ -165,7 +165,7 @@ DRUPAL_TESTING_MIN_BUILD=${DRUPAL_TESTING_MIN_BUILD:-false}
 
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
-export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
+#export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 
 # The url that simpletest will use.
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TESTING_HTTP_HOST}:${DRUPAL_TESTING_HTTP_PORT}}
