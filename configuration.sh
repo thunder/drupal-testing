@@ -11,8 +11,12 @@ DRUPAL_TESTING_VERBOSE=${DRUPAL_TESTING_VERBOSE:-false}
 # The composer project to use. defaults to the drupal/recommended-project. But e.g. Distribution specific projects can be used instead.
 DRUPAL_TESTING_COMPOSER_PROJECT=${DRUPAL_TESTING_COMPOSER_PROJECT:-"drupal/recommended-project"}
 
+# The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
+# are supported. By default, we use the most recent stable version.
+DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]\.[0-9]+$' | head -n1)}
+
 # The version of the composer project to use.
-DRUPAL_TESTING_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION:-"*"}
+DRUPAL_TESTING_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION:-${DRUPAL_TESTING_DRUPAL_VERSION}}
 
 # The directory, where the project is located. On travis this is set to TRAVIS_BUILD_DIR otherwise defaults to the current directory
 DRUPAL_TESTING_PROJECT_BASEDIR=${DRUPAL_TESTING_PROJECT_BASEDIR:-${TRAVIS_BUILD_DIR:-$(pwd)}}
@@ -76,10 +80,6 @@ DRUPAL_TESTING_TEST_DEPRECATION=${DRUPAL_TESTING_TEST_DEPRECATION:-test -f phpst
 
 # The files pattern to ignore when testing php coding styles.
 DRUPAL_TESTING_PHPCS_IGNORE_PATTERN=${DRUPAL_TESTING_PHPCS_IGNORE_PATTERN:-*/vendor/*,*/core/*,*/autoload.php,*.md}
-
-# The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
-# are supported. By default, we use the most recent stable version.
-DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]\.[0-9]+$' | head -n1)}
 
 # The base directory for all generated files. Into this diretory will be drupal installed and temp files stored.
 # This directory gets removed after successful tests.

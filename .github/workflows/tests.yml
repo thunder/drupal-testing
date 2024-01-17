@@ -34,6 +34,7 @@ jobs:
           - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.4.0'
+            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '3.0.12'
             PHP_VERSION: '7.4'
           - RUN: 4
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.4'
@@ -41,6 +42,8 @@ jobs:
           - RUN: 5
             DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
             PHP_VERSION: '8.1'
+          - RUN: 6
+            PHP_VERSION: '8.2'
 
     steps:
       - uses: actions/checkout@v1
@@ -75,6 +78,7 @@ jobs:
           DRUPAL_TESTING_COMPOSER_PROJECT: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT }}
           DRUPAL_TESTING_DRUPAL_VERSION: ${{ matrix.DRUPAL_TESTING_DRUPAL_VERSION }}
           DRUPAL_TESTING_MIN_BUILD: ${{ matrix.DRUPAL_TESTING_MIN_BUILD }}
+          DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: ${{ matrix.DRUPAL_TESTING_COMPOSER_PROJECT_VERSION }}
 
   test-split-upload:
     runs-on: ubuntu-latest
