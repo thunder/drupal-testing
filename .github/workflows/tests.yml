@@ -25,26 +25,21 @@ jobs:
         include:
           - RUN: 1
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3'
-            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '9.3.0'
             DRUPAL_TESTING_COMPOSER_PROJECT: 'drupal/recommended-project'
             PHP_VERSION: '8.1'
           - RUN: 2
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.3.0'
-            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '9.3.0'
             DRUPAL_TESTING_MIN_BUILD: true
             PHP_VERSION: '8.1'
           - RUN: 3
             DRUPAL_TESTING_COMPOSER_PROJECT: 'thunder/thunder-project'
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.4.0'
-            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '9.4.0'
             PHP_VERSION: '7.4'
           - RUN: 4
             DRUPAL_TESTING_DRUPAL_VERSION: '~9.4'
-            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '9.4.0'
             PHP_VERSION: '8.0'
           - RUN: 5
             DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
-            DRUPAL_TESTING_COMPOSER_PROJECT_VERSION: '10.0'
             PHP_VERSION: '8.1'
 
     steps:
