@@ -66,7 +66,7 @@ _stage_prepare_build() {
         composer require "${dev_dependency}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     done
 
-    composer require drush/drush --no-install --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require drush/drush --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Allow required plugins
     composer config allow-plugins.cweagans/composer-patches true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
