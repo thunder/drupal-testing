@@ -76,4 +76,5 @@ _stage_prepare_build() {
     composer config allow-plugins.oomphinc/composer-installers-extender true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.phpstan/extension-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.php-http/php-http/discovery true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 }
