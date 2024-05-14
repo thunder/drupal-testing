@@ -56,6 +56,7 @@ _stage_prepare_old_install() {
       mkdir -p "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}"
     fi
 
-    # Fake a prepare build completion so that install can run.
+    # Fake stage completion so that install can run.
+    touch "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/build"
     touch "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/prepare_build"
 }
