@@ -3,6 +3,7 @@
 _stage_prepare_old_install() {
     local docroot
     docroot=$(get_distribution_docroot false)
+    COMPOSER_ROOT_VERSION=${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION}
 
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} != "drupal-profile" ]]; then
@@ -13,6 +14,7 @@ _stage_prepare_old_install() {
     # Checkout the profile and get the version we want to upgrade from.
     mkdir -p ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY}
     cp -R ${DRUPAL_TESTING_WORKSPACE}/. ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY}
+    git -C ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY} fetch
     git -C ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY} checkout ${DRUPAL_TESTING_UPGRADE_VERSION}
 
     printf "Prepare composer.json\n\n"
@@ -36,7 +38,7 @@ _stage_prepare_old_install() {
     composer require cweagans/composer-patches --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config extra.enable-patching true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
-    composer require drush/drush:${DRUSH_VERSION} --prefer-lowest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require drush/drush:${DRUPAL_TESTING_UPGRADE_DRUSH_VERSION} --prefer-lowest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Allow required plugins
     composer config allow-plugins.cweagans/composer-patches true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
@@ -48,5 +50,5 @@ _stage_prepare_old_install() {
     composer config allow-plugins.phpstan/extension-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Install the lowest versions of everything.
-    composer install --prefer-lowest --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer update --prefer-lowest --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 }
