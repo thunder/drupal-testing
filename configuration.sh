@@ -95,13 +95,20 @@ DRUPAL_TESTING_SITES_DIRECTORY=${DRUPAL_TESTING_SITES_DIRECTORY:-default}
 # This directory gets removed after successful tests.
 DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY=${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY:-${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/install}
 
-
-# Upgrade testing variables. Must be set.
+# The version of the project to upgrade from.
 DRUPAL_TESTING_UPGRADE_VERSION=${DRUPAL_TESTING_UPGRADE_VERSION:-""}
+
+# The version of the composer project to upgrade from.
 DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION:-""}
-# Upgrade testing variables with defaults.
+
+# The path to the git checkout under test.
 DRUPAL_TESTING_WORKSPACE=${DRUPAL_TESTING_WORKSPACE:-${GITHUB_WORKSPACE}}
+
+# The version of Drush to use prior to upgrading.
 DRUPAL_TESTING_UPGRADE_DRUSH_VERSION=${DRUPAL_TESTING_UPGRADE_DRUSH_VERSION:-"10.3.6"}
+
+# The location where the project will be copied to and the version to upgrade
+# from will be checkout out here.
 DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY=${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY:-${DRUPAL_TESTING_TEST_BASE_DIRECTORY}/old_install}
 
 # The directory, where the tests are located relative to the docroot. This will default to the project directory.
