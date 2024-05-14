@@ -51,4 +51,11 @@ _stage_prepare_old_install() {
 
     # Install the lowest versions of everything.
     composer update --prefer-lowest --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+
+    if [[ ! -d ${DRUPAL_TESTING_LOCK_FILES_DIRECTORY} ]]; then
+      mkdir -p "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}"
+    fi
+
+    # Fake a prepare build completion so that install can run.
+    touch "${DRUPAL_TESTING_LOCK_FILES_DIRECTORY}/prepare_build"
 }
