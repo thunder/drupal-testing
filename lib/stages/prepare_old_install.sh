@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_stage_old_install() {
+_stage_prepare_old_install() {
     local docroot
     docroot=$(get_distribution_docroot false)
 
