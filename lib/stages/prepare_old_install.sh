@@ -3,7 +3,7 @@
 _stage_prepare_old_install() {
     local docroot
     docroot=$(get_distribution_docroot false)
-    COMPOSER_ROOT_VERSION=${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION}
+    export COMPOSER_ROOT_VERSION=${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION}
 
     # When we test a full project, all we need is the project files itself.
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} != "drupal-profile" ]]; then
