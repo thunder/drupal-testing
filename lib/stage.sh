@@ -57,6 +57,12 @@ stage_dependency() {
     prepare_build)
         dep="requirements"
         ;;
+    prepare_old_install)
+        dep="requirements"
+        ;;
+    prepare_upgrade)
+        dep="prepare_old_install"
+        ;;
     requirements)
         dep="coding_style"
         ;;
