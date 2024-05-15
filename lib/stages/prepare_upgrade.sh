@@ -10,6 +10,8 @@ _stage_prepare_upgrade() {
         exit 1
     fi
 
+    printf "Prepare composer.json to upgrade to version under test\n\n"
+
     # Add asset-packagist for projects, that require frontend assets
     if ! composer_repository_exists "https://asset-packagist.org"; then
         composer config extra."installer-types".0 bower-asset --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
