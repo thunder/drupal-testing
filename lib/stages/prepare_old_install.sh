@@ -12,12 +12,13 @@ _stage_prepare_old_install() {
     fi
 
     # Checkout the profile and get the version we want to upgrade from.
+    printf "Checking out ${DRUPAL_TESTING_UPGRADE_VERSION}\n\n"
     mkdir -p ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY}
     cp -R ${DRUPAL_TESTING_WORKSPACE}/. ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY}
     git -C ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY} fetch
     git -C ${DRUPAL_TESTING_UPGRADE_DRUPAL_INSTALLATION_DIRECTORY} checkout ${DRUPAL_TESTING_UPGRADE_VERSION}
 
-    printf "Prepare composer.json\n\n"
+    printf "Prepare composer.json to install version to upgrade from\n\n"
 
     # Build is based on drupal project
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
