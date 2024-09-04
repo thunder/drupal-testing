@@ -5,7 +5,7 @@
  * This script assumes you're in a Laravel project that has access
  * to the Str, Collection and Symfony's Process class.
  */
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 /**
  * Lists PHPunit tests in the following format:
