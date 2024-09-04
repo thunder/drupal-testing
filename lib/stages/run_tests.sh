@@ -12,7 +12,7 @@ _stage_run_tests() {
     local phpunit="composer exec -- phpunit --debug"
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
-      ./paralell-testing
+      paralell-testing
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_GROUP} ]]; then
