@@ -9,7 +9,11 @@ _stage_run_tests() {
     test_location=$(get_project_location)
 
     local test_selection=""
-    local phpunit="composer exec -- phpunit --debug"
+    local phpunit="composer exec -- phpunit"
+
+    if [ "${DRUPAL_TESTING_VERBOSE}" = true ]; then
+        phpunit="${phpunit} --debug"
+    fi
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
       paralell-testing
