@@ -48,7 +48,14 @@ _stage_run_tests() {
         test_selection="${test_selection} --filter ${DRUPAL_TESTING_TEST_FILTER}"
     fi
 
-    local runtest="${phpunit} --configuration ${docroot}/core ${test_selection} ${test_location}"
+    if [[ ${DRUPAL_TESTING_TEST_CONFIGURATION} ]]; then
+        test_selection="${test_selection} --configuration ${DRUPAL_TESTING_TEST_CONFIGURATION}"
+    else
+        test_selection="${test_selection} --configuration ${docroot}/core"
+    fi
+
+
+    local runtest="${phpunit} ${test_selection} ${test_location}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
     eval "COMPOSER_PROCESS_TIMEOUT=0 ${runtest}" || exit 1
