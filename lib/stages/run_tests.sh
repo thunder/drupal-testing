@@ -16,7 +16,13 @@ _stage_run_tests() {
     fi
 
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
-      paralell-testing
+        phpunit="composer exec -- paratest -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
+        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
+          phpunit=${phpunit}" -f"
+        fi
+        if [ "${DRUPAL_TESTING_PARALLEL_TESTING_WRAPPER_RUNNER}" = true ]; then
+          phpunit=${phpunit}" --runner WrapperRunner"
+        fi
     fi
 
     if [[ ${DRUPAL_TESTING_TEST_GROUP} ]]; then

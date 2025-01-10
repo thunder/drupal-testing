@@ -13,15 +13,12 @@
     ],
     "bin": [
         "bin/keep-travis-running",
-        "bin/paralell-testing",
         "bin/test-drupal-project"
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=7.2",
         "drupal/coder": "^8.3",
-        "symfony/yaml": "^6.3",
-        "symfony/process": "^6.3",
-        "illuminate/support": "^11.2"
+        "symfony/yaml": "^3.4"
     },
     "config": {
         "allow-plugins": {
