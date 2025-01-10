@@ -60,7 +60,6 @@ _stage_run_tests() {
         test_selection="${test_selection} --configuration ${docroot}/core"
     fi
 
-
     local runtest="${phpunit} ${test_selection} ${test_location}"
 
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
