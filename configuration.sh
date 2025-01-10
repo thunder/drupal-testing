@@ -45,6 +45,9 @@ DRUPAL_TESTING_COMPOSER_NAME=${DRUPAL_TESTING_COMPOSER_NAME:-$(jq -r .name "${DR
 # vendor/myproject the project name will be myproject.
 DRUPAL_TESTING_PROJECT_NAME=${DRUPAL_TESTING_PROJECT_NAME-$(jq -r --arg FALLBACK "$(echo "${DRUPAL_TESTING_COMPOSER_NAME}" | cut -d '/' -f 2)" '.extra."installer-name" // $FALLBACK' "${DRUPAL_TESTING_PROJECT_BASEDIR}/composer.json")}
 
+# The phpunit configuration file to use. Defaults to docroot/core/phpunit.xml.dist
+DRUPAL_TESTING_TEST_CONFIGURATION=${DRUPAL_TESTING_TEST_CONFIGURATION:-""}
+
 # Path for phpunit to search for test files. Default is the current project folder.
 DRUPAL_TESTING_TEST_PATH=${DRUPAL_TESTING_TEST_PATH:-""}
 
