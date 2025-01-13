@@ -39,6 +39,9 @@ _stage_prepare_upgrade() {
     # Set the path repository back to the project under test.
     composer config repositories.0 path "${DRUPAL_TESTING_PROJECT_BASEDIR}" --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
+    jq '.repositories[0].options = {}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
+    jq '.repositories[0].options.symlink = false' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json" | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}""/composer.json"
+
     # Use jq to find all dev dependencies of the project and add them to root composer file.
     for dev_dependency in $(jq -r '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
         composer require "${dev_dependency}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
