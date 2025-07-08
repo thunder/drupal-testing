@@ -15,6 +15,10 @@ _stage_run_tests() {
         phpunit="${phpunit} --debug"
     fi
 
+    if [[ -x "$(command -v mysql)" ]]; then
+      mysql --host="${DRUPAL_TESTING_DATABASE_HOST}" --port="${DRUPAL_TESTING_DATABASE_PORT}" --user="${DRUPAL_TESTING_DATABASE_USER}" --password="${DRUPAL_TESTING_DATABASE_PASSWORD}" -e "set GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED"
+    fi
+
     if [ "${DRUPAL_TESTING_PARALLEL_TESTING}" = true ]; then
         phpunit="composer exec -- paratest -p "${DRUPAL_TESTING_PARALLEL_TESTING_PROCESSES}
         if [ "${DRUPAL_TESTING_PARALLEL_TESTING_PER_FUNCTION}" = true ]; then
