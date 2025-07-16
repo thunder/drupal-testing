@@ -14,7 +14,7 @@ _stage_build() {
     local testing_project_name=drupal-testing-"${DRUPAL_TESTING_COMPOSER_NAME}"
     composer config name "${testing_project_name}" --working-dir="${DRUPAL_TESTING_PROJECT_BASEDIR}"
     composer remove "${DRUPAL_TESTING_COMPOSER_NAME}" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
-    composer require "${testing_project_name}:*" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require "${testing_project_name}:*@dev" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Install all dependencies
     cd "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" || exit
