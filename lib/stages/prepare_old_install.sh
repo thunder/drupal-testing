@@ -35,7 +35,7 @@ _stage_prepare_old_install() {
     composer config repositories.2 composer https://packages.drupal.org/8 --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Enable patching
-    composer require cweagans/composer-patches --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer require cweagans/composer-patches:"^1.6.5" --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config extra.enable-patching true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     composer require drush/drush:${DRUPAL_TESTING_UPGRADE_DRUSH_VERSION} --prefer-lowest --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
