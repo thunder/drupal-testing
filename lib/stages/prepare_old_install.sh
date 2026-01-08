@@ -48,6 +48,7 @@ _stage_prepare_old_install() {
     composer config allow-plugins.oomphinc/composer-installers-extender true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config allow-plugins.phpstan/extension-installer true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
+    composer config allow-plugins.php-http/discovery true --no-plugins --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Install the lowest versions of everything.
     composer update --prefer-lowest --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
