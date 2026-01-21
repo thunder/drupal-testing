@@ -182,6 +182,9 @@ DRUPAL_TESTING_INSTALLATION_FORM_VALUES=${DRUPAL_TESTING_INSTALLATION_FORM_VALUE
 # versions of dependencies are installed.
 DRUPAL_TESTING_MIN_BUILD=${DRUPAL_TESTING_MIN_BUILD:-false}
 
+# Use the lenient drupal packagist endpoint.
+DRUPAL_TESTING_USE_LENIENT_ENDPOINT=${DRUPAL_TESTING_USE_LENIENT_ENDPOINT:-false}
+
 # The symfony environment variable to ignore deprecations, for possible values see symfony documentation.
 # The default value is "week" to ignore any deprecation notices.
 export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
