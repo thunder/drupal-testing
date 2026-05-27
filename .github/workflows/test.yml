@@ -24,11 +24,8 @@ jobs:
         RUN: [1, 2]
         include:
           - RUN: 1
-            DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
-            PHP_VERSION: '8.1'
-          - RUN: 2
-            DRUPAL_TESTING_DRUPAL_VERSION: '~10.0'
-            PHP_VERSION: '8.2'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~11.3'
+            PHP_VERSION: '8.4'
 
     steps:
       - uses: actions/checkout@v1
@@ -74,7 +71,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: '8.1'
+          php-version: '8.3'
           extensions: gd, pdo_mysql
 
       - name: Start MySql service
@@ -126,7 +123,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: '8.1'
+          php-version: '8.3'
           extensions: gd, pdo_mysql
 
       - name: Start MySql service
