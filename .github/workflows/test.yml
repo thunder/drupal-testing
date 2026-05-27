@@ -110,7 +110,7 @@ jobs:
         run: cd /tmp; tar cfz build.tgz test; mv build.tgz ${GITHUB_WORKSPACE}
 
       - name: Upload build
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: build.tgz
@@ -139,7 +139,7 @@ jobs:
           echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
 
       - name: Download build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: build
 
