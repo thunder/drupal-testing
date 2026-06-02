@@ -23,6 +23,8 @@ _stage_prepare_old_install() {
     # Build is based on drupal project
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_UPGRADE_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
 
+    # Disable blocking on security advisories — this is a CI test environment, not production.
+    composer config audit.block-insecure false --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config "prefer-stable" true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Reorder repositories, to make sure, local path is first.

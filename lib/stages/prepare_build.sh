@@ -15,6 +15,8 @@ _stage_prepare_build() {
     # Build is based on drupal project
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
 
+    # Disable blocking on security advisories — this is a CI test environment, not production.
+    composer config audit.block-insecure false --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config "prefer-stable" true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} != "drupal-profile" ]]; then
@@ -61,7 +63,7 @@ _stage_prepare_build() {
     composer config extra.enable-patching true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     # Use jq to find all dev dependencies of the project and add them to root composer file.
-    for dev_dependency in $(jq -r '.["require-dev"?] | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
+    for dev_dependency in $(jq -r '(.["require-dev"?] // {}) | keys[] as $k | "\($k):\(.[$k])"' "${DRUPAL_TESTING_PROJECT_BASEDIR}"/composer.json); do
         composer require "${dev_dependency}" --dev --no-update --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     done
 

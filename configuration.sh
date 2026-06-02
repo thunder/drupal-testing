@@ -13,7 +13,8 @@ DRUPAL_TESTING_COMPOSER_PROJECT=${DRUPAL_TESTING_COMPOSER_PROJECT:-"drupal/recom
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported. By default, we use the most recent stable version.
-DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]\.[0-9]+$' | head -n1)}
+_drupal_latest_core=$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-"~${_drupal_latest_core%.*}"}
 
 # The version of the composer project to use.
 DRUPAL_TESTING_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION:-${DRUPAL_TESTING_DRUPAL_VERSION}}
@@ -190,7 +191,7 @@ export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TESTING_HTTP_HOST}:${DRUPAL_TESTING_HTTP_PORT}}
 
 # The driver args for webdriver.
-export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", {\"chromeOptions\": {\"w3c\": false } }, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/wd/hub\"]"}
+export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", {\"goog:chromeOptions\": {\"args\": [\"--headless\", \"--disable-gpu\", \"--no-sandbox\", \"--disable-dev-shm-usage\"]}}, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/wd/hub\"]"}
 
 # Increase composer memory limit.
 export COMPOSER_MEMORY_LIMIT=${COMPOSER_MEMORY_LIMIT:-"-1"}
