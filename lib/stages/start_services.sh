@@ -34,6 +34,18 @@ _stage_start_services() {
         fi
 
         wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
+
+        # Wait for Selenium node to be ready to accept sessions (port open ≠ node registered).
+        local selenium_status_url="http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/status"
+        local ready_count=0
+        until curl -sf "${selenium_status_url}" | grep -q '"ready":true'; do
+            sleep 2
+            ready_count=$((ready_count + 1))
+            if [[ ${ready_count} -gt 15 ]]; then
+                printf "Error: Selenium node did not become ready in time.\n" 1>&2
+                exit 1
+            fi
+        done
     fi
 
     if ! port_is_open "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}"; then

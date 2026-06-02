@@ -44,7 +44,7 @@ class ModuleServiceTest extends UnitTestCase {
    * @return array
    *   A list of number and the servings they generate.
    */
-  public function numberProvider(): array {
+  public static function numberProvider(): array {
     return [
       [1, 'You have been served a 1'],
     ];
