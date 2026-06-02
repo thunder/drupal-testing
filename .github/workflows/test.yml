@@ -24,7 +24,7 @@ jobs:
         RUN: [1, 2]
         include:
           - RUN: 1
-            DRUPAL_TESTING_DRUPAL_VERSION: '~11.3.10'
+            DRUPAL_TESTING_DRUPAL_VERSION: '~11.3'
             PHP_VERSION: '8.4'
 
     steps:
