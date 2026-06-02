@@ -8,6 +8,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
+/**
+ * Tests for the Service class.
+ */
 #[CoversClass(\Drupal\module\Service::class)]
 #[Group('module')]
 class ModuleServiceTest extends UnitTestCase {
@@ -27,6 +30,9 @@ class ModuleServiceTest extends UnitTestCase {
     $this->service = new Service();
   }
 
+  /**
+   * Tests the serve method.
+   */
   #[DataProvider('numberProvider')]
   public function testServe($number, $serving): void {
     $this->assertEquals($serving, $this->service->serve($number));
