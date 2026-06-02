@@ -13,7 +13,8 @@ DRUPAL_TESTING_COMPOSER_PROJECT=${DRUPAL_TESTING_COMPOSER_PROJECT:-"drupal/recom
 
 # The drupal version to test against. This can be any valid composer version string, but only drupal versions greater 8.6
 # are supported. By default, we use the most recent stable version.
-DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]\.[0-9]+$' | head -n1)}
+_drupal_latest_core=$(git ls-remote --tags --sort=-version:refname https://github.com/drupal/core.git | grep -E -o '[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+DRUPAL_TESTING_DRUPAL_VERSION=${DRUPAL_TESTING_DRUPAL_VERSION:-"~${_drupal_latest_core%.*}"}
 
 # The version of the composer project to use.
 DRUPAL_TESTING_COMPOSER_PROJECT_VERSION=${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION:-${DRUPAL_TESTING_DRUPAL_VERSION}}
