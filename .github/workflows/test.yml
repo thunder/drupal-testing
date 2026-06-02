@@ -12,7 +12,7 @@ env:
   DRUPAL_TESTING_DATABASE_USER: root
   DRUPAL_TESTING_DATABASE_PASSWORD: root
   DRUPAL_TESTING_DATABASE_ENGINE: mysql
-  DRUPAL_TESTING_SELENIUM_CHROME_VERSION: '105.0'
+  DRUPAL_TESTING_SELENIUM_CHROME_VERSION: 'latest'
 
 jobs:
   test-projects:
@@ -139,6 +139,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
+          path: build
 
       - name: Unzip build artifact
         run: tar xCfz /tmp build/build.tgz test; rm -rf build
