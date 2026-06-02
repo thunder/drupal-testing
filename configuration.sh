@@ -191,7 +191,7 @@ export SYMFONY_DEPRECATIONS_HELPER=${SYMFONY_DEPRECATIONS_HELPER-weak}
 export SIMPLETEST_BASE_URL=${SIMPLETEST_BASE_URL:-http://${DRUPAL_TESTING_HTTP_HOST}:${DRUPAL_TESTING_HTTP_PORT}}
 
 # The driver args for webdriver.
-export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", {\"goog:chromeOptions\": {\"args\": [\"--headless\", \"--disable-gpu\", \"--no-sandbox\", \"--disable-dev-shm-usage\"]}}, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}\"]"}
+export MINK_DRIVER_ARGS_WEBDRIVER=${MINK_DRIVER_ARGS_WEBDRIVER-"[\"chrome\", {\"goog:chromeOptions\": {\"args\": [\"--headless\", \"--disable-gpu\", \"--no-sandbox\", \"--disable-dev-shm-usage\"]}}, \"http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/wd/hub\"]"}
 
 # Increase composer memory limit.
 export COMPOSER_MEMORY_LIMIT=${COMPOSER_MEMORY_LIMIT:-"-1"}

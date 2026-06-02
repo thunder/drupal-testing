@@ -28,24 +28,27 @@ _stage_start_services() {
 
         if [ "${DRUPAL_TESTING_USE_SELENIUM}"  = true ]; then
             docker run --detach --net host --name "${DRUPAL_TESTING_SELENIUM_DOCKER_NAME}" --volume "${DRUPAL_TESTING_PROJECT_BASEDIR}":/project --volume /dev/shm:/dev/shm selenium/standalone-chrome:"${DRUPAL_TESTING_SELENIUM_CHROME_VERSION}"
+            wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
+            # Wait for Selenium node to register — port open ≠ Chrome node ready.
+            local selenium_status_url="http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/status"
+            local ready_count=0
+            until curl -sf "${selenium_status_url}" | grep -q '"ready":true'; do
+                sleep 2
+                ready_count=$((ready_count + 1))
+                if [[ ${ready_count} -gt 15 ]]; then
+                    printf "Error: Selenium node did not become ready in time.\n" 1>&2
+                    exit 1
+                fi
+            done
+        elif command -v chromedriver > /dev/null 2>&1; then
+            # Use system ChromeDriver (pre-installed on GitHub Actions runners).
+            chromedriver --port="${DRUPAL_TESTING_SELENIUM_PORT}" --url-base=/wd/hub &
+            wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
         else
             download_chromedriver
             "${DRUPAL_TESTING_TEST_BASE_DIRECTORY}"/chromedriver --port="${DRUPAL_TESTING_SELENIUM_PORT}" --url-base=/wd/hub &
+            wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
         fi
-
-        wait_for_port "${DRUPAL_TESTING_SELENIUM_HOST}" "${DRUPAL_TESTING_SELENIUM_PORT}"
-
-        # Wait for Selenium node to be ready to accept sessions (port open ≠ node registered).
-        local selenium_status_url="http://${DRUPAL_TESTING_SELENIUM_HOST}:${DRUPAL_TESTING_SELENIUM_PORT}/status"
-        local ready_count=0
-        until curl -sf "${selenium_status_url}" | grep -q '"ready":true'; do
-            sleep 2
-            ready_count=$((ready_count + 1))
-            if [[ ${ready_count} -gt 15 ]]; then
-                printf "Error: Selenium node did not become ready in time.\n" 1>&2
-                exit 1
-            fi
-        done
     fi
 
     if ! port_is_open "${DRUPAL_TESTING_HTTP_HOST}" "${DRUPAL_TESTING_HTTP_PORT}"; then
