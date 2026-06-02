@@ -4,11 +4,12 @@ namespace Drupal\Tests\module\Unit;
 
 use Drupal\module\Service;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @coversDefaultClass \Drupal\module\Service
- * @group module
- */
+#[CoversClass(\Drupal\module\Service::class)]
+#[Group('module')]
 class ModuleServiceTest extends UnitTestCase {
   /**
    * The entity permission provider.
@@ -26,11 +27,7 @@ class ModuleServiceTest extends UnitTestCase {
     $this->service = new Service();
   }
 
-  /**
-   * @covers ::serve
-   *
-   * @dataProvider numberProvider
-   */
+  #[DataProvider('numberProvider')]
   public function testServe($number, $serving): void {
     $this->assertEquals($serving, $this->service->serve($number));
   }

@@ -3,14 +3,16 @@
 namespace Drupal\Tests\module\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Class ModuleControllerTest.
  *
  * Javascript tests.
- *
- * @group module
  */
+#[Group('module')]
+#[RunTestsInSeparateProcesses]
 class ModuleControllerTest extends WebDriverTestBase {
 
   /**
