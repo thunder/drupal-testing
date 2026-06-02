@@ -16,8 +16,7 @@ _stage_prepare_build() {
     composer create-project "${DRUPAL_TESTING_COMPOSER_PROJECT}":"${DRUPAL_TESTING_COMPOSER_PROJECT_VERSION}" "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}" --no-interaction --no-install
 
     # Disable blocking on security advisories — this is a CI test environment, not production.
-    jq '.config.audit["block-insecure"] = false' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/composer.json" | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' "${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}/composer.json"
-
+    composer config audit.block-insecure false --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
     composer config "prefer-stable" true --working-dir="${DRUPAL_TESTING_DRUPAL_INSTALLATION_DIRECTORY}"
 
     if [[ ${DRUPAL_TESTING_PROJECT_TYPE} != "drupal-profile" ]]; then
